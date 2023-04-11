@@ -3,16 +3,27 @@
 import 'dart:convert';
 import 'dart:html';
 import 'package:frontend/data/models/user.dart';
+import 'package:http/browser_client.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
   final String baseUrl = 'http://localhost:5000/auth';
+  final http.Client _client = http.Client();
+
+  Future<User> getMe() async {
+    (_client as BrowserClient).withCredentials = true;
+    final response = await _client.get(Uri.parse('$baseUrl/user'));
+    final json = jsonDecode(response.body);
+    return User.fromJson(json);
+  }
 
   Future<User> login(String emailAddress, String password) async {
-    final response = await http.post(
+    (_client as BrowserClient).withCredentials = true;
+    final response = await _client.post(
       Uri.parse('$baseUrl/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Access-Control-Allow-Credentials': 'true'
       },
       body: jsonEncode(<String, String>{
         'email_address': emailAddress,
@@ -20,6 +31,7 @@ class AuthService {
       }),
     );
 
+    print(response.headers);
     if (response.statusCode == 200) {
       final loggedInUser = User.fromJson(jsonDecode(response.body));
       return loggedInUser;
@@ -30,7 +42,8 @@ class AuthService {
 
   Future<User> signUp(String emailAddress, String password, String username,
       String studentId) async {
-    final response = await http.post(
+    (_client as BrowserClient).withCredentials = true;
+    final response = await _client.post(
       Uri.parse('$baseUrl/signup'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -57,14 +70,15 @@ class AuthService {
     final top = (window.screen!.height! - height) ~/ 2;
 
     window.open(
-      baseUrl,
+      '$baseUrl/microsoft',
       'The Ashesi Network',
       'width=$width,height=$height,left=$left,top=$top',
     );
   }
 
   Future<void> logout() async {
-    final response = await http.get(
+    (_client as BrowserClient).withCredentials = true;
+    final response = await _client.get(
       Uri.parse('$baseUrl/logout'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -74,6 +88,5 @@ class AuthService {
     if (response.statusCode != 200) {
       throw Exception('Logout Failed');
     }
-
   }
 }

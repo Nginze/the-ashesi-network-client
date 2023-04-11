@@ -1,11 +1,11 @@
 class User {
-  final String userId;
-  final String studentId;
-  final String emailAddress;
-  final String userName;
-  final String avatarUrl;
-  final String microsoftId;
-  final String bio;
+  final String? userId;
+  final String? studentId;
+  final String? emailAddress;
+  final String? userName;
+  final String? avatarUrl;
+  final String? microsoftId;
+  final String? bio;
 
   User({
     required this.userId,
