@@ -19,9 +19,12 @@ class _PostTileState extends State<PostTile> {
   bool _saved = false;
   int _likes = 0;
   int _comments = 0;
+
   @override
   void initState() {
     super.initState();
+    _liked = (widget.post.hasLiked) as bool;
+    _saved = (widget.post.hasSaved) as bool;
     _likes = (widget.post.likeCount) as int;
     _comments = (widget.post.commentCount) as int;
   }
@@ -86,10 +89,14 @@ class _PostTileState extends State<PostTile> {
                                   setState(() {
                                     if (_liked) {
                                       _likes--;
+                                      _liked = !_liked;
+                                      postService
+                                          .unLikePost(widget.post.postId);
                                     } else {
                                       _likes++;
+                                      _liked = !_liked;
+                                      postService.likePost(widget.post.postId);
                                     }
-                                    _liked = !_liked;
                                   });
                                 },
                                 icon: Icon(_liked
@@ -108,6 +115,7 @@ class _PostTileState extends State<PostTile> {
                               IconButton(
                                 onPressed: () {},
                                 icon: Icon(EvaIcons.messageCircleOutline),
+                                color: Colors.grey,
                                 iconSize: 18,
                                 splashRadius: 18,
                               ),
@@ -118,7 +126,13 @@ class _PostTileState extends State<PostTile> {
                           IconButton(
                             onPressed: () {
                               setState(() {
-                                _saved = !_saved;
+                                if (_saved) {
+                                  _saved = !_saved;
+                                  postService.unSavePost(widget.post.postId);
+                                } else {
+                                  _saved = !_saved;
+                                  postService.savePost(widget.post.postId);
+                                }
                               });
                             },
                             icon: Icon(_saved

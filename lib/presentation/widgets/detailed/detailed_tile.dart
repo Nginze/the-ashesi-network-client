@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/models/post.dart';
+import 'package:frontend/data/services/api/post_service.dart';
 import 'package:frontend/presentation/widgets/detailed/comment_input.dart';
 import 'package:frontend/presentation/widgets/detailed/detailed_app_bar.dart';
 import 'package:frontend/utils/helpers.dart';
@@ -14,6 +15,21 @@ class DetailedTile extends StatefulWidget {
 }
 
 class _DetailedTileState extends State<DetailedTile> {
+  final postService = PostService();
+  bool _liked = false;
+  bool _saved = false;
+  int _likes = 0;
+  int _comments = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _liked = (widget.post.hasLiked) as bool;
+    _saved = (widget.post.hasSaved) as bool;
+    _likes = (widget.post.likeCount) as int;
+    _comments = (widget.post.commentCount) as int;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -65,12 +81,27 @@ class _DetailedTileState extends State<DetailedTile> {
                       Row(
                         children: [
                           IconButton(
-                            onPressed: () {},
-                            icon: const Icon(EvaIcons.heartOutline),
+                            onPressed: () {
+                              setState(() {
+                                if (_liked) {
+                                  _likes--;
+                                  _liked = !_liked;
+                                  postService.unLikePost(widget.post.postId);
+                                } else {
+                                  _likes++;
+                                  _liked = !_liked;
+                                  postService.likePost(widget.post.postId);
+                                }
+                              });
+                            },
+                            color: _liked ? Colors.pink : Colors.grey,
+                            icon: Icon(_liked
+                                ? EvaIcons.heart
+                                : EvaIcons.heartOutline),
                             iconSize: 18,
                             splashRadius: 18,
                           ),
-                          Text("${widget.post.likeCount}")
+                          Text("${_likes}")
                         ],
                       ),
                       const SizedBox(width: 18),
@@ -79,16 +110,30 @@ class _DetailedTileState extends State<DetailedTile> {
                           IconButton(
                             onPressed: () {},
                             icon: Icon(EvaIcons.messageCircleOutline),
+                            color:  Colors.grey,
                             iconSize: 18,
                             splashRadius: 18,
                           ),
-                          Text("${widget.post.commentCount}")
+                          Text("${_comments}")
                         ],
                       ),
                       const SizedBox(width: 18),
                       IconButton(
-                        onPressed: () {},
-                        icon: Icon(EvaIcons.bookmarkOutline),
+                        onPressed: () {
+                          setState(() {
+                            if (_saved) {
+                              _saved = !_saved;
+                              postService.unSavePost(widget.post.postId);
+                            } else {
+                              _saved = !_saved;
+                              postService.savePost(widget.post.postId);
+                            }
+                          });
+                        },
+                        color: _saved ? Colors.amber : Colors.grey,
+                        icon: Icon(_saved
+                            ? EvaIcons.bookmark
+                            : EvaIcons.bookmarkOutline),
                         iconSize: 18,
                         splashRadius: 18,
                       ),
