@@ -58,7 +58,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Flexible(
+
         child: Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -82,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                     child: Column(children: [
                       FeedInput(),
                       Container(
-                        height: 522,
+                        height: 510,
                         child: ListView.builder(
                           controller: scrollController,
                           itemCount: posts.length + 1,

@@ -87,7 +87,8 @@ class _DetailedPageState extends State<DetailedPage> {
                 const SizedBox(width: 30),
                 Expanded(
                     flex: 3,
-                    child: Column(children: [
+                    child: SingleChildScrollView(
+                        child: Column(children: [
                       FutureBuilder(
                           future: post,
                           builder: (context, snapshot) {
@@ -112,26 +113,26 @@ class _DetailedPageState extends State<DetailedPage> {
                                   )
                                 : Center();
                           }),
-                      Container(
-                        height: 275,
-                        child: ListView.builder(
-                          controller: scrollController,
-                          itemCount: comments.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index == comments.length) {
-                              return Center(
-                                child: isLoading
-                                    ? CircularProgressIndicator()
-                                    : SizedBox.shrink(),
-                              );
-                            }
+                      // Container(
+                      //   height: 175,
+                      //   child: ListView.builder(
+                      //     controller: scrollController,
+                      //     itemCount: comments.length + 1,
+                      //     itemBuilder: (context, index) {
+                      //       if (index == comments.length) {
+                      //         return Center(
+                      //           child: isLoading
+                      //               ? CircularProgressIndicator()
+                      //               : SizedBox.shrink(),
+                      //         );
+                      //       }
 
-                            Comment comment = comments[index];
-                            return CommentTile(comment: comment);
-                          },
-                        ),
-                      ),
-                    ])),
+                      //       Comment comment = comments[index];
+                      //       return CommentTile(comment: comment);
+                      //     },
+                      //   ),
+                      // ),
+                    ]))),
                 const SizedBox(width: 30),
                 const Expanded(
                   child: SizedBox(

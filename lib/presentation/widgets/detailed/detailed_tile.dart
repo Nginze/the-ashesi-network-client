@@ -48,7 +48,10 @@ class _DetailedTileState extends State<DetailedTile> {
                   : const AssetImage('assets/images/default_profile.png'),
             ),
             const SizedBox(width: 20),
-            Column(children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start, 
+              children: [
+              
               Container(
                   width: 650,
                   child: Row(
@@ -72,6 +75,20 @@ class _DetailedTileState extends State<DetailedTile> {
                     widget.post.content,
                     style: TextStyle(fontFamily: 'FS'),
                   )),
+              widget.post.mediaUrl != null
+                  ? Container(
+                      width: 400,
+                      constraints: BoxConstraints(
+                          minHeight: 350, minWidth: 400, maxHeight: 500),
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            widget.post.mediaUrl,
+                            fit: BoxFit.cover,
+                          )),
+                    )
+                  : Center(),
               const SizedBox(height: 5),
               Container(
                   width: 650,
@@ -110,7 +127,7 @@ class _DetailedTileState extends State<DetailedTile> {
                           IconButton(
                             onPressed: () {},
                             icon: Icon(EvaIcons.messageCircleOutline),
-                            color:  Colors.grey,
+                            color: Colors.grey,
                             iconSize: 18,
                             splashRadius: 18,
                           ),

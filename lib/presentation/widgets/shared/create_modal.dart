@@ -55,10 +55,15 @@
 //   }
 // }
 
+import 'dart:typed_data';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/data/services/api/post_service.dart';
+import 'package:frontend/providers/selected_image_provider.dart';
 import 'package:frontend/providers/user_provider.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 
 class CustomModal extends ConsumerStatefulWidget {
   @override
@@ -69,86 +74,125 @@ class _CustomModalState extends ConsumerState<CustomModal> {
   final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
 
+  final postService = PostService();
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: 600,
-        height: 300,
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                    child: CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Color.fromARGB(125, 158, 158, 158),
-                  backgroundImage: ref.watch(userProvider).avatarUrl != null
-                      ? NetworkImage(ref.watch(userProvider).avatarUrl)
-                          as ImageProvider<Object>?
-                      : const AssetImage('assets/images/default_profile.png'),
-                )),
-                Expanded(
-                    flex: 9,
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextFormField(
-                            controller: _textController,
-                            decoration: InputDecoration(
-                                floatingLabelAlignment:
-                                    FloatingLabelAlignment.start,
-                                hintText: "What's happening?",
-                                border: InputBorder.none),
-                            maxLines: 11,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                              return null;
-                            },
-                          ),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-            Divider(color: Color.fromARGB(111, 138, 138, 138), height: 0.3),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return IntrinsicHeight(
+        child: Container(
+            width: 600,
+            padding: EdgeInsets.all(16),
+            child: Column(
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextButton(
-                      onPressed: () {},
-                      child: const Icon(EvaIcons.imageOutline),
-                    ),
-                    const SizedBox(width: 10),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Icon(Icons.emoji_emotions_outlined),
-                    )
+                    Expanded(
+                        child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Color.fromARGB(125, 158, 158, 158),
+                      backgroundImage: ref.watch(userProvider).avatarUrl != null
+                          ? NetworkImage(ref.watch(userProvider).avatarUrl)
+                              as ImageProvider<Object>?
+                          : const AssetImage(
+                              'assets/images/default_profile.png'),
+                    )),
+                    Expanded(
+                        flex: 9,
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextFormField(
+                                controller: _textController,
+                                decoration: InputDecoration(
+                                    floatingLabelAlignment:
+                                        FloatingLabelAlignment.start,
+                                    hintText: "What's happening?",
+                                    border: InputBorder.none),
+                                maxLines: 11,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ],
+                          ),
+                        ))
                   ],
                 ),
-                TextButton.icon(
-                  onPressed: () {
-                    // Handle button press
-                  },
-                  label: Text("Send"),
-                  icon: Icon(
-                    EvaIcons.paperPlane,
-                  ),
+                ref.watch(imageProvider).isNotEmpty
+                    ? SingleChildScrollView(
+                        child: Container(
+                            width: 500,
+                            constraints: BoxConstraints(maxHeight: 300),
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Stack(fit: StackFit.expand, children: [
+                              ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.memory(
+                                    ref.watch(imageProvider),
+                                    fit: BoxFit.cover,
+                                  )),
+                              Positioned(
+                                  top: 2,
+                                  right: 3,
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        ref.read(imageProvider.notifier).state =
+                                            Uint8List(0);
+                                      },
+                                      child: InkResponse(
+                                        child: Icon(
+                                            color: Colors.white, Icons.close),
+                                      )))
+                            ])))
+                    : Center(),
+                Divider(color: Color.fromARGB(111, 138, 138, 138), height: 0.3),
+                SizedBox(
+                  height: 10,
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () async {
+                            Uint8List? selectedImageBytes =
+                                await ImagePickerWeb.getImageAsBytes();
+                            ref.read(imageProvider.notifier).state =
+                                (selectedImageBytes) as Uint8List;
+                          },
+                          child: const Icon(EvaIcons.imageOutline),
+                        ),
+                        const SizedBox(width: 10),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Icon(Icons.emoji_emotions_outlined),
+                        )
+                      ],
+                    ),
+                    TextButton.icon(
+                      onPressed: () async {
+                        final myPost = <String, dynamic>{
+                          'content': _textController.text,
+                          'media_content': ref.watch(imageProvider),
+                        };
+                        postService.createPost(myPost);
+                      },
+                      label: Text("Send"),
+                      icon: Icon(
+                        EvaIcons.paperPlane,
+                      ),
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
-        ));
+            )));
   }
 }

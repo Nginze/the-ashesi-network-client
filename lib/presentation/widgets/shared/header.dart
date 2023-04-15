@@ -3,6 +3,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/presentation/widgets/shared/create_modal.dart';
 import 'package:frontend/providers/user_provider.dart';
 import 'package:frontend/utils/constants.dart';
 
@@ -58,7 +59,14 @@ class Header extends ConsumerWidget {
                           backgroundColor: MaterialStateProperty.all<Color>(
                               AppTheme.primaryColor)),
                       label: const Text("Create"),
-                      onPressed: () => {},
+                      onPressed: () => {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Dialog(child: CustomModal());
+                          },
+                        )
+                      },
                       icon: const Icon(Icons.add),
                     )),
                 const SizedBox(width: 15),
@@ -76,13 +84,14 @@ class Header extends ConsumerWidget {
                       ? CircleAvatar(
                           radius: 30,
                           backgroundColor: Colors.grey,
-                          backgroundImage: NetworkImage(ref.watch(userProvider).avatarUrl),
+                          backgroundImage:
+                              NetworkImage(ref.watch(userProvider).avatarUrl),
                         )
-                  : const CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.grey,
-                    child: Icon(Icons.person),
-                  ),
+                      : const CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.grey,
+                          child: Icon(Icons.person),
+                        ),
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[
                     const PopupMenuItem<String>(

@@ -17,15 +17,11 @@ class PostService {
     return Post.fromJson(json);
   }
 
-  Future<void> createPost(Post post) async {
+  void createPost(Map<String, dynamic> post) async {
     (_client as BrowserClient).withCredentials = true;
     final response = await _client.post(
       Uri.parse(baseUrl),
-      body: jsonEncode({
-        'post_id': post.postId,
-        'title': post.title,
-        'content': post.content,
-      }),
+      body: jsonEncode(post),
     );
     if (response.statusCode != 200) {
       throw Exception('Failed to create post');
