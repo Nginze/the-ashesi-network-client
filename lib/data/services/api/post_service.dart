@@ -21,7 +21,6 @@ class PostService {
       Uri.parse(baseUrl),
       body: jsonEncode({
         'post_id': post.postId,
-        'author_id': post.authorId,
         'title': post.title,
         'content': post.content,
       }),
@@ -31,18 +30,21 @@ class PostService {
     }
   }
 
-  // Future<void> updatePost(Post post) async {
-  //   final response = await http.patch(
-  //     Uri.parse('$baseUrl/${post.postId}'),
-  //     body: jsonEncode({
-  //       'title': post.title,
-  //       'body': post.body,
-  //     }),
-  //   );
-  //   if (response.statusCode != 200) {
-  //     throw Exception('Failed to update post');
-  //   }
-  // }
+  Future<List<Post>> getFeed(int cursor, String sort) async {
+    (_client as BrowserClient).withCredentials = true;
+    final response = await http.get(
+      Uri.parse('$baseUrl/feed?cursor=$cursor&sort=$sort'),
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return List<Post>.from(
+        json['data'].map((postJson) => Post.fromJson(postJson)),
+      );
+    } else {
+      throw Exception('Failed to get Feed');
+    }
+  }
 
   Future<void> deletePost(String postId) async {
     (_client as BrowserClient).withCredentials = true;
@@ -52,16 +54,16 @@ class PostService {
     }
   }
 
-  Future<List<Comment>> getComments(String postId, int cursor) async {
+  Future<List<Comment>> getComments(int cursor, String postId) async {
     (_client as BrowserClient).withCredentials = true;
     final response = await _client
         .get(Uri.parse(('$baseUrl/$postId/comment/all?cursor=$cursor')));
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
       return List<Comment>.from(
-        json.map((commentJson) => Comment.fromJson(commentJson)),
+        json['data'].map((commentJson) => Comment.fromJson(commentJson)),
       );
-    }else{
+    } else {
       throw Exception('Failed to get Comments');
     }
   }

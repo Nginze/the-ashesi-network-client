@@ -4,7 +4,7 @@ import 'package:frontend/utils/constants.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-  
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }

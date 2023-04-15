@@ -1,37 +1,23 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/data/models/post.dart';
-import 'package:frontend/data/services/api/post_service.dart';
+import 'package:frontend/data/models/comment.dart';
 import 'package:frontend/utils/helpers.dart';
-import 'package:go_router/go_router.dart';
 
-class PostTile extends StatefulWidget {
-  final Post post;
-  const PostTile({Key? key, required this.post}) : super(key: key);
+class CommentTile extends StatefulWidget {
+  final Comment comment;
+  const CommentTile({Key? key, required this.comment}) : super(key: key);
 
   @override
-  State<PostTile> createState() => _PostTileState();
+  State<CommentTile> createState() => _CommentTileState();
 }
 
-class _PostTileState extends State<PostTile> {
-  final postService = PostService();
-  bool _liked = false;
-  bool _saved = false;
-  int _likes = 0;
-  int _comments = 0;
-  @override
-  void initState() {
-    super.initState();
-    _likes = (widget.post.likeCount) as int;
-    _comments = (widget.post.commentCount) as int;
-  }
-
+class _CommentTileState extends State<CommentTile> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
         hoverColor: Colors.transparent,
         onTap: () {
-          context.go('/post/${widget.post.postId}');
+          print("clicked");
         },
         child: Column(
           children: [
@@ -43,8 +29,8 @@ class _PostTileState extends State<PostTile> {
                 CircleAvatar(
                   radius: 20,
                   backgroundColor: Color.fromARGB(125, 158, 158, 158),
-                  backgroundImage: widget.post.author['avatar_url'] != null
-                      ? NetworkImage(widget.post.author['avatar_url'])
+                  backgroundImage: widget.comment.author['avatar_url'] != null
+                      ? NetworkImage(widget.comment.author['avatar_url'])
                           as ImageProvider<Object>?
                       : const AssetImage('assets/images/default_profile.png'),
                 ),
@@ -56,21 +42,21 @@ class _PostTileState extends State<PostTile> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              widget.post.author['username'],
+                              widget.comment.author['username'],
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              ' @${widget.post.author['username'].replaceAll(' ', '').toLowerCase()}',
+                              ' @${widget.comment.author['username'].replaceAll(' ', '').toLowerCase()}',
                               style: TextStyle(fontSize: 13),
                             ),
                             Text(" • "),
-                            Text('${formatDateTime(widget.post.createdAt)}')
+                            Text('${formatDateTime(widget.comment.createdAt)}')
                           ])),
                   const SizedBox(height: 10),
                   Container(
                       width: 650,
                       child: Text(
-                        widget.post.content,
+                        widget.comment.content,
                         style: TextStyle(fontFamily: 'FS'),
                       )),
                   const SizedBox(height: 5),
@@ -82,24 +68,12 @@ class _PostTileState extends State<PostTile> {
                           Row(
                             children: [
                               IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    if (_liked) {
-                                      _likes--;
-                                    } else {
-                                      _likes++;
-                                    }
-                                    _liked = !_liked;
-                                  });
-                                },
-                                icon: Icon(_liked
-                                    ? EvaIcons.heart
-                                    : EvaIcons.heartOutline),
-                                color: _liked ? Colors.pink : Colors.grey,
+                                onPressed: () {},
+                                icon: const Icon(EvaIcons.heartOutline),
                                 iconSize: 18,
                                 splashRadius: 18,
                               ),
-                              Text("${_likes}")
+                              const Text("6")
                             ],
                           ),
                           const SizedBox(width: 18),
@@ -111,20 +85,13 @@ class _PostTileState extends State<PostTile> {
                                 iconSize: 18,
                                 splashRadius: 18,
                               ),
-                              Text("${_comments}")
+                              const Text("5")
                             ],
                           ),
                           const SizedBox(width: 18),
                           IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _saved = !_saved;
-                              });
-                            },
-                            icon: Icon(_saved
-                                ? EvaIcons.bookmark
-                                : EvaIcons.bookmarkOutline),
-                            color: _saved ? Colors.amber : Colors.grey,
+                            onPressed: () {},
+                            icon: Icon(EvaIcons.bookmarkOutline),
                             iconSize: 18,
                             splashRadius: 18,
                           ),

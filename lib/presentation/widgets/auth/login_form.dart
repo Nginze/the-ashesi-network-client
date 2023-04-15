@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/data/services/api/auth_service.dart';
+import 'package:frontend/providers/user_provider.dart';
 import 'package:frontend/utils/constants.dart';
 
-class LoginForm extends StatefulWidget {
+class LoginForm extends StatefulWidget{
   @override
   _LoginFormState createState() => _LoginFormState();
 }
@@ -54,9 +56,7 @@ class _LoginFormState extends State<LoginForm> {
                       elevation: MaterialStateProperty.all<double>(1),
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.white)),
-                  onPressed: () => {
-                    authService.loginWithMicrosoft()
-                  },
+                  onPressed: () => {authService.loginWithMicrosoft()},
                 ),
               ),
               const SizedBox(height: 10),

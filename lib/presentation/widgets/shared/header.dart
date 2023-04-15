@@ -1,13 +1,15 @@
 import 'dart:html';
-
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/providers/user_provider.dart';
 import 'package:frontend/utils/constants.dart';
 
-class Header extends StatelessWidget {
+class Header extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    print(ref.watch(userProvider).userId);
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -31,17 +33,15 @@ class Header extends StatelessWidget {
                     width: 350,
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     child: const TextField(
-                      decoration: InputDecoration( 
+                      decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.all(Radius.circular(4.0)),
                         ),
-                        prefixIcon: Icon(Icons.search), 
+                        prefixIcon: Icon(Icons.search),
                         fillColor: Color.fromARGB(169, 235, 235, 235),
                         filled: true,
-                        hintStyle: TextStyle(
-                          fontSize: 14
-                        ),
+                        hintStyle: TextStyle(fontSize: 14),
                         hintText: 'Search',
                       ),
                     ))
@@ -72,11 +72,16 @@ class Header extends StatelessWidget {
                 PopupMenuButton<String>(
                   splashRadius: 20,
                   iconSize: 30,
-                  icon: const CircleAvatar(
+                  icon: ref.watch(userProvider).avatarUrl != null
+                      ? CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.grey,
+                          backgroundImage: NetworkImage(ref.watch(userProvider).avatarUrl),
+                        )
+                  : const CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.grey,
-                    backgroundImage: NetworkImage(
-                        'https://qph.cf2.quoracdn.net/main-qimg-e52c82fa77ccc4232f0da36682f7d0d7-lq'),
+                    child: Icon(Icons.person),
                   ),
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[

@@ -19,7 +19,7 @@ class CommentService {
     final response = await _client.post(
       Uri.parse(baseUrl),
       body: jsonEncode({
-        'author_id': comment.authorId,
+        // 'author_id': comment.authorId,
         'parent_id': comment.parentId,
         'content': comment.content
       }),

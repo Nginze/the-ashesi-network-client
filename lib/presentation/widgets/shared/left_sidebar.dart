@@ -66,6 +66,7 @@ class _LeftNavigationBarState extends State<LeftNavigationBar> {
             },
             icon: const Icon(EvaIcons.peopleOutline),
           ),
+          
         ]);
   }
 }
