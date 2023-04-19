@@ -8,6 +8,7 @@ import 'package:frontend/presentation/widgets/detailed/detailed_tile.dart';
 import 'package:frontend/presentation/widgets/home/post_tile.dart';
 import 'package:frontend/presentation/widgets/shared/feed_input.dart';
 import 'package:frontend/presentation/widgets/shared/header.dart';
+import 'package:frontend/presentation/widgets/shared/layout.dart';
 import 'package:frontend/presentation/widgets/shared/left_sidebar.dart';
 import 'package:frontend/presentation/widgets/shared/right_sidebar.dart';
 
@@ -64,88 +65,96 @@ class _DetailedPageState extends State<DetailedPage> {
 
   @override
   Widget build(BuildContext context) {
-    Future<Post> post = postService.getPost((widget.postId) as String);
+    return Layout();
+    // Future<Post> post = postService.getPost((widget.postId) as String);
 
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Header(),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 30),
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Expanded(
-                  child: SizedBox(
-                    height: 500,
-                    child: LeftNavigationBar(),
-                  ),
-                ),
-                const SizedBox(width: 30),
-                Expanded(
-                    flex: 3,
-                    child: SingleChildScrollView(
-                        child: Column(children: [
-                      FutureBuilder(
-                          future: post,
-                          builder: (context, snapshot) {
-                            return snapshot.hasData
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      DetailedTile(
-                                          post: (snapshot.data) as Post),
-                                      Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              25, 0, 20, 25),
-                                          child: CommentInput()),
-                                      Text(
-                                        "${snapshot.data!.commentCount} Comments",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  )
-                                : Center();
-                          }),
-                      // Container(
-                      //   height: 175,
-                      //   child: ListView.builder(
-                      //     controller: scrollController,
-                      //     itemCount: comments.length + 1,
-                      //     itemBuilder: (context, index) {
-                      //       if (index == comments.length) {
-                      //         return Center(
-                      //           child: isLoading
-                      //               ? CircularProgressIndicator()
-                      //               : SizedBox.shrink(),
-                      //         );
-                      //       }
+    // return SafeArea(
+    //     child: Scaffold(
+    //   backgroundColor: Colors.white,
+    //   body: Column(
+    //     children: [
+    //       Header(),
+    //       Container(
+    //         margin: const EdgeInsets.symmetric(vertical: 30),
+    //         padding: const EdgeInsets.symmetric(horizontal: 50),
+    //         child: Row(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: <Widget>[
+    //             const Expanded(
+    //               child: SizedBox(
+    //                 height: 500,
+    //                 child: LeftNavigationBar(),
+    //               ),
+    //             ),
+    //             const SizedBox(width: 30),
+    //             Expanded(
+    //                 flex: 3,
+    //                 child: SliverList(
+    //                   delegate: SliverChildBuilderDelegate(
+    //                     childCount: 25,
+    //                     (context, index) {
+    //                       Text("hello world");
+    //                     },
+    //                   ),
+    //                 )
+    //                 //   delegate: Column(children: [
+    //                 // FutureBuilder(
+    //                 //     future: post,
+    //                 //     builder: (context, snapshot) {
+    //                 //       return snapshot.hasData
+    //                 //           ? Column(
+    //                 //               crossAxisAlignment:
+    //                 //                   CrossAxisAlignment.start,
+    //                 //               children: [
+    //                 //                 DetailedTile(
+    //                 //                     post: (snapshot.data) as Post),
+    //                 //                 Container(
+    //                 //                     margin: EdgeInsets.fromLTRB(
+    //                 //                         25, 0, 20, 25),
+    //                 //                     child: CommentInput()),
+    //                 //                 Text(
+    //                 //                   "${snapshot.data!.commentCount} Comments",
+    //                 //                   style: TextStyle(
+    //                 //                       fontSize: 18,
+    //                 //                       fontWeight: FontWeight.bold),
+    //                 //                 ),
+    //                 //               ],
+    //                 //             )
+    //                 //           : Center();
+    //                 //     }),
+    //                 // Container(
+    //                 //   height: 175,
+    //                 //   child: ListView.builder(
+    //                 //     controller: scrollController,
+    //                 //     itemCount: comments.length + 1,
+    //                 //     itemBuilder: (context, index) {
+    //                 //       if (index == comments.length) {
+    //                 //         return Center(
+    //                 //           child: isLoading
+    //                 //               ? CircularProgressIndicator()
+    //                 //               : SizedBox.shrink(),
+    //                 //         );
+    //                 //       }
 
-                      //       Comment comment = comments[index];
-                      //       return CommentTile(comment: comment);
-                      //     },
-                      //   ),
-                      // ),
-                    ]))),
-                const SizedBox(width: 30),
-                const Expanded(
-                  child: SizedBox(
-                    height: 500,
-                    width: double.infinity,
-                    child: RightNavigationBar(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ));
+    //                 //       Comment comment = comments[index];
+    //                 //       return CommentTile(comment: comment);
+    //                 //     },
+    //                 //   ),
+    //                 // ),
+    //                 ),
+    //             const SizedBox(width: 30),
+    //             const Expanded(
+    //               child: SizedBox(
+    //                 height: 500,
+    //                 width: double.infinity,
+    //                 child: RightNavigationBar(),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // ));
   }
 }

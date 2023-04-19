@@ -24,7 +24,29 @@ class PostService {
       body: jsonEncode(post),
     );
     if (response.statusCode != 200) {
+      Fluttertoast.showToast(
+          msg: "Couldn't Create Post! Try again.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          webPosition: 'center',
+          webBgColor: "#101110",
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+
       throw Exception('Failed to create post');
+    } else {
+      Fluttertoast.showToast(
+          msg: "Created Post!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          webPosition: 'center',
+          webBgColor: "#101110",
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 

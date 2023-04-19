@@ -30,7 +30,7 @@ import 'package:intl/intl.dart';
 
 class Post {
   final String postId;
-  final String mediaUrl;
+  final String? mediaUrl;
   final String? title;
   final String content;
   final int? likeCount;

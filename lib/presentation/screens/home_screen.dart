@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                 const Expanded(
                   child: SizedBox(
                     height: 500,
-                    child: LeftNavigationBar(),
+                    // child: LeftNavigationBar(),
                   ),
                 ),
                 const SizedBox(width: 30),

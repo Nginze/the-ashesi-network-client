@@ -82,7 +82,7 @@ class FeedInput extends ConsumerWidget {
                               return Dialog(child: CustomModal());
                             });
                       },
-                      label: Text("Send"),
+                      label: Text("Post"),
                       icon: Icon(
                         EvaIcons.paperPlane,
                       ),

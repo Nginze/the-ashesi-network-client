@@ -57,6 +57,7 @@
 
 import 'dart:typed_data';
 
+import 'package:boxicons/boxicons.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -83,13 +84,24 @@ class _CustomModalState extends ConsumerState<CustomModal> {
             width: 600,
             padding: EdgeInsets.all(16),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.close),
+                  splashRadius: 18,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                         child: CircleAvatar(
-                      radius: 20,
+                      radius: 30,
                       backgroundColor: Color.fromARGB(125, 158, 158, 158),
                       backgroundImage: ref.watch(userProvider).avatarUrl != null
                           ? NetworkImage(ref.watch(userProvider).avatarUrl)
@@ -97,6 +109,9 @@ class _CustomModalState extends ConsumerState<CustomModal> {
                           : const AssetImage(
                               'assets/images/default_profile.png'),
                     )),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Expanded(
                         flex: 9,
                         child: Form(
@@ -110,8 +125,9 @@ class _CustomModalState extends ConsumerState<CustomModal> {
                                     floatingLabelAlignment:
                                         FloatingLabelAlignment.start,
                                     hintText: "What's happening?",
+                                    hintStyle: TextStyle(fontSize: 20),
                                     border: InputBorder.none),
-                                maxLines: 11,
+                                maxLines: 8,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter some text';
@@ -177,17 +193,28 @@ class _CustomModalState extends ConsumerState<CustomModal> {
                         )
                       ],
                     ),
-                    TextButton.icon(
-                      onPressed: () async {
-                        final myPost = <String, dynamic>{
-                          'content': _textController.text,
-                          'media_content': ref.watch(imageProvider),
-                        };
-                        postService.createPost(myPost);
-                      },
-                      label: Text("Send"),
-                      icon: Icon(
-                        EvaIcons.paperPlane,
+                    SizedBox(
+                      width: 100,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(
+                              EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 20)),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.blue),
+                          iconSize: MaterialStateProperty.all(25.0),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(36),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          "Post",
+                          style: TextStyle(color: Colors.white, fontSize: 14.0),
+                        ),
+                        onPressed: () {},
                       ),
                     ),
                   ],

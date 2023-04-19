@@ -1,3 +1,4 @@
+import 'package:frontend/data/models/post.dart';
 import 'package:frontend/data/models/user.dart';
 import 'package:http/browser_client.dart';
 import 'package:http/http.dart' as http;
@@ -42,6 +43,38 @@ class UserService {
     final response = await _client.post(Uri.parse('$baseUrl/$userId/unfollow'));
     if (response.statusCode != 200) {
       throw Exception('Failed to unfollow user');
+    }
+  }
+
+  Future<List<Post>> getCreated(int cursor) async {
+    (_client as BrowserClient).withCredentials = true;
+    final response = await _client.get(
+      Uri.parse('$baseUrl/created?cursor=$cursor'),
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return List<Post>.from(
+        json['data'].map((postJson) => Post.fromJson(postJson)),
+      );
+    } else {
+      throw Exception('Failed to get Feed');
+    }
+  }
+
+  Future<List<Post>> getSaved(int cursor) async {
+    (_client as BrowserClient).withCredentials = true;
+    final response = await _client.get(
+      Uri.parse('$baseUrl/bookmarks?cursor=$cursor'),
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return List<Post>.from(
+        json['data'].map((postJson) => Post.fromJson(postJson)),
+      );
+    } else {
+      throw Exception('Failed to get Feed');
     }
   }
 }

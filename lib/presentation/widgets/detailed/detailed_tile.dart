@@ -84,11 +84,11 @@ class _DetailedTileState extends State<DetailedTile> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.network(
-                            widget.post.mediaUrl,
+                            (widget.post.mediaUrl) as String,
                             fit: BoxFit.cover,
                           )),
                     )
-                  : Center(),
+                  : const Center(),
               const SizedBox(height: 5),
               Container(
                   width: 650,
