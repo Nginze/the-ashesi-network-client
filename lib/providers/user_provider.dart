@@ -12,5 +12,12 @@ final userProvider = StateProvider<User>((ref) {
       userName: '',
       avatarUrl: '',
       microsoftId: '',
-      bio: '');
+      bio: '',
+      favoriteFood: '',
+      favoriteMovie: '',
+      major: '',
+      residency: '',
+      yearGroup: '',
+      dateOfBirth: ''
+      );
 });

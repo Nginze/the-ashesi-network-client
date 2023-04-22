@@ -18,11 +18,17 @@ class UserService {
 
 
   Future<void> updateUser(User user) async {
-    // ability to select images from file system and upload them
     (_client as BrowserClient).withCredentials = true;
     final response = await _client.patch(
       Uri.parse('$baseUrl/${user.userId}'),
-      body: jsonEncode({'bio': user.bio, 'avatar_url': user.avatarUrl}),
+      body: jsonEncode({
+        'bio': user.bio, 
+        'major': user.major,
+        'year_group': user.yearGroup, 
+        'favorite_food': user.favoriteFood,
+        'favorite_movie': user.favoriteMovie, 
+        'residency': user.residency
+      }),
     );
 
     if (response.statusCode != 200) {

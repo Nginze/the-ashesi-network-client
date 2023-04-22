@@ -22,7 +22,14 @@ class AuthService {
           userName: '',
           avatarUrl: '',
           microsoftId: '',
-          bio: '');
+          bio: '',
+          favoriteFood: '',
+          favoriteMovie: '',
+          major: '',
+          residency: '',
+          yearGroup: '',
+          dateOfBirth: '' 
+          );
     }
     return User.fromJson(json);
   }

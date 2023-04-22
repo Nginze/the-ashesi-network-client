@@ -19,6 +19,7 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   final UserService userService = UserService();
+
   User _user = User(
       userId: '',
       studentId: '',
@@ -26,7 +27,14 @@ class _ProfileViewState extends State<ProfileView> {
       userName: '',
       avatarUrl: '',
       microsoftId: '',
-      bio: '');
+      bio: '',
+      favoriteFood: '',
+      favoriteMovie: '',
+      major: '',
+      residency: '',
+      yearGroup: '',
+      dateOfBirth: '', 
+      );
   Future<User> getUser(userId) async {
     return userService.getUser(userId);
   }
@@ -159,7 +167,6 @@ class _ProfileViewState extends State<ProfileView> {
             ),
           ),
           SliverToBoxAdapter(
-
             child: Column(
               children: [
                 ProfileCard(user: _user),
@@ -201,7 +208,6 @@ class _ProfileViewState extends State<ProfileView> {
                                           SliverList(
                                             delegate:
                                                 SliverChildBuilderDelegate(
-
                                               (context, index) {
                                                 if (index == _posts.length) {
                                                   return Center(

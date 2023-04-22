@@ -108,7 +108,7 @@ class ProfileCard extends ConsumerWidget {
                       SizedBox(
                         width: 10,
                       ),
-                      Text(user!.bio)
+                      Text('${user!.bio}')
                     ],
                   ),
                   SizedBox(
@@ -124,7 +124,7 @@ class ProfileCard extends ConsumerWidget {
                       SizedBox(
                         width: 10,
                       ),
-                      Text("On Campus")
+                      Text('${user!.residency}')
                     ],
                   ),
                   SizedBox(
@@ -140,14 +140,14 @@ class ProfileCard extends ConsumerWidget {
                       SizedBox(
                         width: 10,
                       ),
-                      Text("Naruto the Last")
+                      Text('${user!.favoriteMovie}')
                     ],
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.restaurant_menu_outlined,
@@ -156,7 +156,7 @@ class ProfileCard extends ConsumerWidget {
                       SizedBox(
                         width: 10,
                       ),
-                      Text("Waakye")
+                      Text('${user!.favoriteFood}')
                     ],
                   ),
                 ])
