@@ -1,29 +1,32 @@
 import 'dart:typed_data';
+
 import 'package:boxicons/boxicons.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/data/models/post.dart';
+import 'package:frontend/data/services/api/comment_service.dart';
 import 'package:frontend/data/services/api/post_service.dart';
-import 'package:frontend/data/services/socket_service.dart';
 import 'package:frontend/providers/selected_image_provider.dart';
-import 'package:frontend/providers/socket_provider.dart';
 import 'package:frontend/providers/user_provider.dart';
 import 'package:image_picker_web/image_picker_web.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-class CustomModal extends ConsumerStatefulWidget {
+class ReplyModal extends ConsumerStatefulWidget {
+  final String username;
+  final String postId;
+  final String parentId;
+
+  ReplyModal(this.username, this.postId, this.parentId);
+
   @override
-  _CustomModalState createState() => _CustomModalState();
+  _ReplyModalState createState() => _ReplyModalState();
 }
 
-class _CustomModalState extends ConsumerState<CustomModal> {
+class _ReplyModalState extends ConsumerState<ReplyModal> {
   final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
 
   final postService = PostService();
-  final SocketService socketService =
-      SocketService(socket: IO.io('http://localhost:5000'));
+  final commentService = CommentService();
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +75,8 @@ class _CustomModalState extends ConsumerState<CustomModal> {
                                 decoration: InputDecoration(
                                     floatingLabelAlignment:
                                         FloatingLabelAlignment.start,
-                                    hintText: "What's happening?",
+                                    hintText:
+                                        "Reply to @${widget.username.replaceAll(' ', '').toLowerCase()}",
                                     hintStyle: TextStyle(fontSize: 20),
                                     border: InputBorder.none),
                                 maxLines: 8,
@@ -159,19 +163,11 @@ class _CustomModalState extends ConsumerState<CustomModal> {
                           ),
                         ),
                         child: const Text(
-                          "Post",
+                          "Reply",
                           style: TextStyle(color: Colors.white, fontSize: 14.0),
                         ),
-                        onPressed: () async {
-                          Map<String, dynamic> post = {
-                            'content': _textController.text,
-                            'media_content': ref.watch(imageProvider),
-                          };
-                          //send info via socket hered
-                          Map createdPost = await postService.createPost(post);
-                          ref
-                              .watch(socketProvider)
-                              .emit("new_post", createdPost);
+                        onPressed: () {
+                          commentService.createComment(_textController.text, widget.postId, widget.parentId);
                           Navigator.pop(context);
                         },
                       ),

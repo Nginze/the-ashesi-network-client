@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/models/comment.dart';
 import 'package:frontend/data/services/api/comment_service.dart';
 import 'package:frontend/presentation/widgets/detailed/reply_modal.dart';
-import 'package:frontend/presentation/widgets/detailed/reply_tile.dart';
 import 'package:frontend/utils/helpers.dart';
 
-class CommentTile extends StatefulWidget {
+class ReplyTile extends StatefulWidget {
   final Comment comment;
-  const CommentTile({Key? key, required this.comment}) : super(key: key);
+  const ReplyTile({Key? key, required this.comment}) : super(key: key);
 
   @override
-  State<CommentTile> createState() => _CommentTileState();
+  State<ReplyTile> createState() => _ReplyTileState();
 }
 
-class _CommentTileState extends State<CommentTile> {
+class _ReplyTileState extends State<ReplyTile> {
   bool isOpen = false;
   bool repliesLoading = false;
   List<Comment> replies = [];
@@ -138,18 +137,12 @@ class _CommentTileState extends State<CommentTile> {
         isOpen
             ? Container(
                 width: 500,
-                height: 150,
                 child: repliesLoading
-                    ? SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: CircularProgressIndicator())
+                    ? Center(child: CircularProgressIndicator())
                     : ListView.builder(
                         itemCount: replies.length,
                         itemBuilder: (context, index) {
                           Comment currentComment = replies[index];
-                          print(currentComment.content);
-                          // return Text("Hello");
                           return ReplyTile(
                             comment: currentComment,
                           );

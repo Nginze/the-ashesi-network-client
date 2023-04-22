@@ -17,7 +17,7 @@ class PostService {
     return Post.fromJson(json);
   }
 
-  void createPost(Map<String, dynamic> post) async {
+  Future<Map> createPost(Map<String, dynamic> post) async {
     (_client as BrowserClient).withCredentials = true;
     final response = await _client.post(
       Uri.parse(baseUrl),
@@ -47,6 +47,9 @@ class PostService {
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
+
+      final json = jsonDecode(response.body);
+      return json;
     }
   }
 

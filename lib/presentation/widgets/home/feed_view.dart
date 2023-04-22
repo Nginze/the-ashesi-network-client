@@ -1,19 +1,27 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/data/models/post.dart';
 import 'package:frontend/data/services/api/post_service.dart';
+import 'package:frontend/data/services/socket_service.dart';
 import 'package:frontend/presentation/widgets/home/_feed_input.dart';
 import 'package:frontend/presentation/widgets/home/post_tile.dart';
 import 'package:frontend/presentation/widgets/shared/feed_input.dart';
+import 'package:frontend/providers/socket_provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-class FeedView extends StatefulWidget {
+class FeedView extends ConsumerStatefulWidget {
   @override
   _FeedViewState createState() => _FeedViewState();
 }
 
-class _FeedViewState extends State<FeedView> {
+class _FeedViewState extends ConsumerState<FeedView> {
   final PostService postService = PostService();
+  // final SocketService socketService =
+  //     SocketService(socket: IO.io('http://localhost:5000'));
   ScrollController _scrollController = ScrollController();
   List<Post> _posts = [];
   bool _isLoading = false;
@@ -28,8 +36,8 @@ class _FeedViewState extends State<FeedView> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
     super.dispose();
+    _scrollController.dispose();
   }
 
   Future<void> _fetchData() async {
@@ -51,8 +59,35 @@ class _FeedViewState extends State<FeedView> {
     }
   }
 
+  void _registerEventListeners() {
+    ref.watch(socketProvider).addListener('new_post', (data) {
+      final json = jsonDecode(data);
+      // print(json);
+      Post newPost = Post.fromJson(json);
+      setState(() {
+        _posts.insert(0, newPost);
+      });
+
+      Fluttertoast.showToast(
+          msg: "📗 New Post Received!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          webPosition: 'center',
+          webBgColor: "#101110",
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (!_eventListenersRegistered) {
+      _registerEventListeners();
+      _eventListenersRegistered = true;
+    }
+
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -116,4 +151,6 @@ class _FeedViewState extends State<FeedView> {
       ],
     );
   }
+
+  bool _eventListenersRegistered = false;
 }

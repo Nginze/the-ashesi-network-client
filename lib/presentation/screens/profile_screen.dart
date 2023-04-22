@@ -6,13 +6,16 @@ import 'package:frontend/data/services/api/user_service.dart';
 import 'package:frontend/presentation/widgets/home/post_tile.dart';
 import 'package:frontend/presentation/widgets/profile/profile_card.dart';
 import 'package:frontend/presentation/widgets/profile/profile_tabs.dart';
+import 'package:frontend/presentation/widgets/profile/profile_view.dart';
 import 'package:frontend/presentation/widgets/shared/feed_input.dart';
 import 'package:frontend/presentation/widgets/shared/header.dart';
+import 'package:frontend/presentation/widgets/shared/layout.dart';
 import 'package:frontend/presentation/widgets/shared/left_sidebar.dart';
 import 'package:frontend/presentation/widgets/shared/right_sidebar.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final String userId;
+  const ProfilePage({super.key, required this.userId});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -62,53 +65,59 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final authService = AuthService();
-    return Flexible(
-        child: Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Header(),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 30),
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Expanded(
-                  child: SizedBox(
-                    height: 500,
-                    child: LeftNavigationBar(),
-                  ),
-                ),
-                const SizedBox(width: 30),
-                Expanded(
-                    flex: 3,
-                    child: Column(children: [
-                      FutureBuilder(
-                          future: authService.getMe(),
-                          builder: (BuildContext context, snapshot) {
-                            if (snapshot.hasData) {
-                              return ProfileCard(user: snapshot.data);
-                            } else {
-                              return CircularProgressIndicator();
-                            }
-                          }),
-                      ProfileTab()
-                    ])),
-                const SizedBox(width: 30),
-                const Expanded(
-                  child: SizedBox(
-                    height: 500,
-                    width: double.infinity,
-                    child: RightNavigationBar(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ));
+    return Layout(
+        main: ProfileView(
+          userId: widget.userId,
+        ),
+        right: RightNavigationBar());
   }
 }
+
+    // final authService = AuthService();
+    // return Flexible(
+    //     child: Scaffold(
+    //   backgroundColor: Colors.white,
+    //   body: Column(
+    //     children: [
+    //       Header(),
+    //       Container(
+    //         margin: const EdgeInsets.symmetric(vertical: 30),
+    //         padding: const EdgeInsets.symmetric(horizontal: 50),
+    //         child: Row(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           children: <Widget>[
+    //             const Expanded(
+    //               child: SizedBox(
+    //                 height: 500,
+    //                 child: LeftNavigationBar(),
+    //               ),
+    //             ),
+    //             const SizedBox(width: 30),
+    //             Expanded(
+    //                 flex: 3,
+    //                 child: Column(children: [
+    //                   FutureBuilder(
+    //                       future: authService.getMe(),
+    //                       builder: (BuildContext context, snapshot) {
+    //                         if (snapshot.hasData) {
+    //                           return ProfileCard(user: snapshot.data);
+    //                         } else {
+    //                           return CircularProgressIndicator();
+    //                         }
+    //                       }),
+    //                   ProfileTab()
+    //                 ])),
+    //             const SizedBox(width: 30),
+    //             const Expanded(
+    //               child: SizedBox(
+    //                 height: 500,
+    //                 width: double.infinity,
+    //                 child: RightNavigationBar(),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // ));

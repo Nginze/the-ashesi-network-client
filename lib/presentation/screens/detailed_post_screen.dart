@@ -5,6 +5,8 @@ import 'package:frontend/data/services/api/post_service.dart';
 import 'package:frontend/presentation/widgets/detailed/comment_input.dart';
 import 'package:frontend/presentation/widgets/detailed/comment_tile.dart';
 import 'package:frontend/presentation/widgets/detailed/detailed_tile.dart';
+import 'package:frontend/presentation/widgets/detailed/detailed_view.dart';
+import 'package:frontend/presentation/widgets/home/feed_view.dart';
 import 'package:frontend/presentation/widgets/home/post_tile.dart';
 import 'package:frontend/presentation/widgets/shared/feed_input.dart';
 import 'package:frontend/presentation/widgets/shared/header.dart';
@@ -13,7 +15,7 @@ import 'package:frontend/presentation/widgets/shared/left_sidebar.dart';
 import 'package:frontend/presentation/widgets/shared/right_sidebar.dart';
 
 class DetailedPage extends StatefulWidget {
-  final String? postId;
+  final String postId;
   const DetailedPage({Key? key, required this.postId}) : super(key: key);
 
   @override
@@ -54,7 +56,7 @@ class _DetailedPageState extends State<DetailedPage> {
         isLoading = true;
       });
       List<Comment> newPosts =
-          await postService.getComments(page, (widget.postId) as String);
+          await postService.getComments(page, widget.postId);
       setState(() {
         comments.addAll(newPosts);
         page++;
@@ -65,7 +67,7 @@ class _DetailedPageState extends State<DetailedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Layout();
+    return Layout(main: DetailedView(postId: (widget.postId) as String), right: RightNavigationBar(),);
     // Future<Post> post = postService.getPost((widget.postId) as String);
 
     // return SafeArea(

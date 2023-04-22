@@ -1,26 +1,28 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/data/models/user.dart';
+import 'package:frontend/presentation/widgets/profile/profile_setup.dart';
+import 'package:frontend/providers/user_provider.dart';
 
-class ProfileCard extends StatefulWidget {
+class ProfileCard extends ConsumerWidget {
   // const ProfileCard({super.key});
   final User? user;
   const ProfileCard({Key? key, required this.user}) : super(key: key);
 
-  @override
-  State<ProfileCard> createState() => _ProfileCardState();
-}
+//   @override
+//   State<ProfileCard> createState() => _ProfileCardState();
+// }
 
-class _ProfileCardState extends State<ProfileCard> {
+// class _ProfileCardState extends State<ProfileCard> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
+        padding: const EdgeInsets.all(15),
         margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
         child: Column(
           children: [
-            widget.user != null
+            user != null
                 ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,8 +32,8 @@ class _ProfileCardState extends State<ProfileCard> {
                             backgroundColor: Color.fromARGB(125, 158, 158, 158),
                             // backgroundImage: NetworkImage(
                             //    widget.user!.avatarUrl),
-                            backgroundImage: widget.user!.avatarUrl != null
-                                ? NetworkImage(widget.user!.avatarUrl)
+                            backgroundImage: user!.avatarUrl != null
+                                ? NetworkImage(user!.avatarUrl)
                                     as ImageProvider<Object>?
                                 : const AssetImage(
                                     'assets/images/default_profile.png'),
@@ -43,7 +45,7 @@ class _ProfileCardState extends State<ProfileCard> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.user!.userName,
+                                user!.userName,
                                 style: TextStyle(
                                     fontSize: 26, fontWeight: FontWeight.bold),
                               ),
@@ -60,28 +62,34 @@ class _ProfileCardState extends State<ProfileCard> {
                               SizedBox(height: 15),
                               Row(
                                 children: [
-                                  ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: ElevatedButton.icon(
-                                        style: ButtonStyle(
-                                            elevation:
-                                                MaterialStateProperty.all(0),
-                                            padding: MaterialStateProperty.all(
-                                                EdgeInsets.symmetric(
-                                                    vertical: 15,
-                                                    horizontal: 15))),
-                                        onPressed: () {},
-                                        icon: Icon(EvaIcons.personAddOutline),
-                                        label: Text("Follow"),
-                                      ))
+                                  ref.watch(userProvider).userId != user!.userId
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: ElevatedButton.icon(
+                                            style: ButtonStyle(
+                                                elevation:
+                                                    MaterialStateProperty.all(
+                                                        0),
+                                                padding:
+                                                    MaterialStateProperty.all(
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 15,
+                                                            horizontal: 15))),
+                                            onPressed: () {},
+                                            icon:
+                                                Icon(EvaIcons.personAddOutline),
+                                            label: Text("Follow"),
+                                          ))
+                                      : ProfileSetupButton()
                                 ],
                               )
                             ],
                           )
                         ]),
-                    SizedBox(
-                      width: 250,
-                    ),
+                    // SizedBox(
+                    //   width: 250,
+                    // ),
                   ])
                 : Center(),
             SizedBox(
@@ -100,7 +108,7 @@ class _ProfileCardState extends State<ProfileCard> {
                       SizedBox(
                         width: 10,
                       ),
-                      Text(widget.user!.bio)
+                      Text(user!.bio)
                     ],
                   ),
                   SizedBox(

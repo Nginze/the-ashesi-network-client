@@ -1,39 +1,40 @@
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/presentation/widgets/shared/create_modal.dart';
+import 'package:frontend/providers/user_provider.dart';
 import 'package:frontend/utils/constants.dart';
 import 'package:boxicons/boxicons.dart';
 import 'package:go_router/go_router.dart';
 
-class LeftNavigationBar extends StatefulWidget {
+class LeftNavigationBar extends ConsumerStatefulWidget {
   const LeftNavigationBar({super.key});
 
   @override
-  State<LeftNavigationBar> createState() => _LeftNavigationBarState();
+  ConsumerState<LeftNavigationBar> createState() => _LeftNavigationBarState();
 }
 
-class _LeftNavigationBarState extends State<LeftNavigationBar> {
-
-  static const List<Map<String, dynamic>> _navItems = [
-    {
-      'label': 'Home',
-      'icon': Icon(Boxicons.bx_home, color: Color.fromARGB(202, 0, 0, 0)),
-      'location': '/home'
-    },
-    {
-      'label': 'Bookmarks',
-      'icon': Icon(Boxicons.bx_bookmark, color: Color.fromARGB(202, 0, 0, 0)),
-      'location': '/favorites'
-    },
-    {
-      'label': 'Profile',
-      'icon': Icon(Icons.person, color: Color.fromARGB(202, 0, 0, 0)),
-      'location': '/settings'
-    },
-  ];
-
+class _LeftNavigationBarState extends ConsumerState<LeftNavigationBar> {
   @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> _navItems = [
+      {
+        'label': 'Home',
+        'icon': Icon(Boxicons.bx_home, color: Color.fromARGB(202, 0, 0, 0)),
+        'location': '/'
+      },
+      {
+        'label': 'Bookmarks',
+        'icon': Icon(Boxicons.bx_bookmark, color: Color.fromARGB(202, 0, 0, 0)),
+        'location': '/bookmarks'
+      },
+      {
+        'label': 'Profile',
+        'icon': Icon(Icons.person, color: Color.fromARGB(202, 0, 0, 0)),
+        'location': '/profile/${ref.watch(userProvider).userId}'
+      },
+    ];
     return Container(
         child: ListView.builder(
       itemCount: _navItems.length,
@@ -91,7 +92,17 @@ class _LeftNavigationBarState extends State<LeftNavigationBar> {
                       "Post",
                       style: TextStyle(color: Colors.white, fontSize: 20.0),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(17),
+                                ),
+                                child: CustomModal());
+                          });
+                    },
                   ),
                 ),
               ),
@@ -201,19 +212,19 @@ class NavButton extends StatelessWidget {
   }
 }
 
-class ProfileButton extends StatelessWidget {
+class ProfileButton extends ConsumerWidget {
   const ProfileButton({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       child: Row(children: [
         Container(
-          child: const CircleAvatar(
+          child: CircleAvatar(
               radius: 22,
               backgroundColor: Colors.blue,
-              backgroundImage: AssetImage('assets/images/default_profile.png')),
+              backgroundImage: NetworkImage(ref.watch(userProvider).avatarUrl)),
         ),
         SizedBox(
           width: 15,
@@ -224,12 +235,12 @@ class ProfileButton extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  const Text(
-                    'Jonathan',
+                  Text(
+                    ref.watch(userProvider).userName,
                     style: TextStyle(color: Colors.black, fontSize: 16),
                   ),
                   Text(
-                    '@jonathan123',
+                    '@${ref.watch(userProvider).userName.replaceAll(' ', '').toLowerCase()}',
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                 ],

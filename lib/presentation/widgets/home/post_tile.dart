@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/models/post.dart';
@@ -19,6 +21,13 @@ class _PostTileState extends State<PostTile> {
   bool _saved = false;
   int _likes = 0;
   int _comments = 0;
+
+  final List<Color> colors = [
+    Colors.blue,
+    Colors.orange,
+    Colors.purple,
+  ];
+  final random = Random();
 
   @override
   void initState() {
@@ -47,46 +56,60 @@ class _PostTileState extends State<PostTile> {
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Color.fromARGB(125, 158, 158, 158),
-                            backgroundImage: widget.post.author['avatar_url'] !=
-                                    null
-                                ? NetworkImage(widget.post.author['avatar_url'])
-                                    as ImageProvider<Object>?
-                                : const AssetImage(
-                                    'assets/images/default_profile.png'),
+                          GestureDetector(
+                            onTap: () {
+                              context
+                                  .go('/profile/${widget.post.author['id']}');
+                            },
+                            child: CircleAvatar(
+                              radius: 20,
+                              backgroundColor:
+                                  Color.fromARGB(125, 158, 158, 158),
+                              backgroundImage:
+                                  widget.post.author['avatar_url'] != null
+                                      ? NetworkImage(
+                                              widget.post.author['avatar_url'])
+                                          as ImageProvider<Object>?
+                                      : const AssetImage(
+                                          'assets/images/default_profile.png'),
+                            ),
                           ),
                           const SizedBox(width: 20),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                      Text(
-                                        widget.post.author['username'],
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        ' @${widget.post.author['username'].replaceAll(' ', '').toLowerCase()}',
-                                        style: TextStyle(fontSize: 13),
-                                      ),
-                                      Text(" • "),
-                                      Text(
-                                          '${formatDateTime(widget.post.createdAt)}')
-                                    ])),
+                                GestureDetector(
+                                  onTap: () {
+                                    context.go(
+                                        '/profile/${widget.post.author['id']}');
+                                  },
+                                  child: Container(
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                        Text(
+                                          widget.post.author['username'],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          ' @${widget.post.author['username'].replaceAll(' ', '').toLowerCase()}',
+                                          style: TextStyle(fontSize: 13),
+                                        ),
+                                        Text(" • "),
+                                        Text(
+                                            '${formatDateTime(widget.post.createdAt)}')
+                                      ])),
+                                ),
                                 const SizedBox(height: 10),
                                 Container(
-                                  width: 490,
-                                  child: Text(
-                                  widget.post.content,
-                                  style: TextStyle(fontFamily: 'FS'),
-                                  softWrap: true,
-                                )),
+                                    width: 490,
+                                    child: Text(
+                                      widget.post.content,
+                                      // style: TextStyle(fontFamily: 'FS'),
+                                      softWrap: true,
+                                    )),
                                 widget.post.mediaUrl != null
                                     ? Container(
                                         width: 400,
@@ -99,9 +122,14 @@ class _PostTileState extends State<PostTile> {
                                         child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
-                                            child: Image.network(
-                                              (widget.post.mediaUrl) as String,
-                                              fit: BoxFit.cover,
+                                            child: Container(
+                                              color: colors[random
+                                                  .nextInt(colors.length)],
+                                              child: Image.network(
+                                                (widget.post.mediaUrl)
+                                                    as String,
+                                                fit: BoxFit.cover,
+                                              ),
                                             )),
                                       )
                                     : Center(),
@@ -182,10 +210,10 @@ class _PostTileState extends State<PostTile> {
                               ])
                         ]),
                   ),
-                Divider(
-                  color: Color.fromARGB(85, 158, 158, 158),
-                  height: 0.2,
-                )
+                  Divider(
+                    color: Color.fromARGB(85, 158, 158, 158),
+                    height: 0.2,
+                  )
                 ],
               ))),
     );

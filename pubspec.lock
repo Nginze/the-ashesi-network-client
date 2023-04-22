@@ -134,6 +134,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.4"
+  flutter_step_container:
+    dependency: "direct main"
+    description:
+      name: flutter_step_container
+      sha256: f8bb91066067972814cd8bdffe7bbc6b8c7cb5fa182fe2c404f3f2ee36562fb9
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter

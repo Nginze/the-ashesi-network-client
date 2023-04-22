@@ -14,6 +14,16 @@ class AuthService {
     (_client as BrowserClient).withCredentials = true;
     final response = await _client.get(Uri.parse('$baseUrl/user'));
     final json = jsonDecode(response.body);
+    if (json['msg'] == 'no user') {
+      return User(
+          userId: '',
+          studentId: '',
+          emailAddress: '',
+          userName: '',
+          avatarUrl: '',
+          microsoftId: '',
+          bio: '');
+    }
     return User.fromJson(json);
   }
 

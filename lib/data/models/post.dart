@@ -67,7 +67,7 @@ class Post {
       author: {
         'avatar_url': json['author']['avatar_url'],
         'username': json['author']['username'],
-        'id': json['author']['id'],
+        'id': json['author']['user_id'],
       },
     );
   }
