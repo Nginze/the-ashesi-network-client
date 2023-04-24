@@ -3,15 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/data/services/api/auth_service.dart';
 import 'package:frontend/providers/user_provider.dart';
 import 'package:frontend/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
-class LoginForm extends StatefulWidget{
+class LoginForm extends ConsumerStatefulWidget {
   @override
   _LoginFormState createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends ConsumerState<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final AuthService authService = AuthService();
+  bool isLoading = false;
   String _email = '';
   String _password = '';
 
@@ -127,7 +129,9 @@ class _LoginFormState extends State<LoginForm> {
                   const Text("Don't have an account?"),
                   TextButton(
                     child: const Text("SignUp"),
-                    onPressed: () => {},
+                    onPressed: () {
+                      context.go('/signup');
+                    },
                   )
                 ],
               ),
@@ -140,16 +144,32 @@ class _LoginFormState extends State<LoginForm> {
                       elevation: MaterialStateProperty.all<double>(0.0),
                       backgroundColor: MaterialStateProperty.all<Color>(
                           AppTheme.primaryColor)),
-                  child: const Text(
-                    'Login to account',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () {
+                  child: !isLoading
+                      ? const Text(
+                          'Login to account',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      : Center(
+                          child: CircularProgressIndicator(
+                          color: Colors.white,
+                        )),
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       print(_email);
                       print(_password);
-                      authService.login(_email, _password);
+                      setState(() {
+                        isLoading = true;
+                      });
+                      final loggedInUser =
+                          await authService.login(_email, _password);
+                      setState(() {
+                        isLoading = false;
+                      });
+
+                      ref.read(userProvider.notifier).state = loggedInUser;
+
+                      context.go('/');
                     }
                   },
                 ),

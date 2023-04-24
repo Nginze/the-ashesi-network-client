@@ -28,6 +28,8 @@ class _ReplyModalState extends ConsumerState<ReplyModal> {
   final postService = PostService();
   final commentService = CommentService();
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
@@ -129,15 +131,15 @@ class _ReplyModalState extends ConsumerState<ReplyModal> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        TextButton(
-                          onPressed: () async {
-                            Uint8List? selectedImageBytes =
-                                await ImagePickerWeb.getImageAsBytes();
-                            ref.read(imageProvider.notifier).state =
-                                (selectedImageBytes) as Uint8List;
-                          },
-                          child: const Icon(EvaIcons.imageOutline),
-                        ),
+                        // TextButton(
+                        //   onPressed: () async {
+                        //     Uint8List? selectedImageBytes =
+                        //         await ImagePickerWeb.getImageAsBytes();
+                        //     ref.read(imageProvider.notifier).state =
+                        //         (selectedImageBytes) as Uint8List;
+                        //   },
+                        //   child: const Icon(EvaIcons.imageOutline),
+                        // ),
                         const SizedBox(width: 10),
                         TextButton(
                           onPressed: () {},
@@ -162,12 +164,30 @@ class _ReplyModalState extends ConsumerState<ReplyModal> {
                             ),
                           ),
                         ),
-                        child: const Text(
-                          "Reply",
-                          style: TextStyle(color: Colors.white, fontSize: 14.0),
-                        ),
+                        child: !isLoading
+                            ? const Text(
+                                "Reply",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14.0),
+                              )
+                            : SizedBox(
+                                height: 15,
+                                width: 15,
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                )),
+                              ),
                         onPressed: () {
-                          commentService.createComment(_textController.text, widget.postId, widget.parentId);
+                          setState(() {
+                            isLoading = true;
+                          });
+                          commentService.createComment(_textController.text,
+                              widget.postId, widget.parentId);
+
+                          setState(() {
+                            isLoading = false;
+                          });
                           Navigator.pop(context);
                         },
                       ),

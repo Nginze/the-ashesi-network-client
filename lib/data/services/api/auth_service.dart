@@ -7,7 +7,10 @@ import 'package:http/browser_client.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  final String baseUrl = 'http://localhost:5000/auth';
+  static bool isprod = true;
+  final String baseUrl = isprod
+      ? 'https://flask-production-b88c.up.railway.app/auth'
+      : 'http://localhost:5000/auth';
   final http.Client _client = http.Client();
 
   Future<User> getMe() async {
@@ -28,8 +31,7 @@ class AuthService {
           major: '',
           residency: '',
           yearGroup: '',
-          dateOfBirth: '' 
-          );
+          dateOfBirth: '');
     }
     return User.fromJson(json);
   }
@@ -68,7 +70,8 @@ class AuthService {
       body: jsonEncode(<String, String>{
         'email_address': emailAddress,
         'password': password,
-        'student_id': studentId
+        'student_id': studentId,
+        'username': username
       }),
     );
 

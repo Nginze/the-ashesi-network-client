@@ -25,6 +25,8 @@ class _CustomModalState extends ConsumerState<CustomModal> {
   final SocketService socketService =
       SocketService(socket: IO.io('http://localhost:5000'));
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
@@ -91,29 +93,15 @@ class _CustomModalState extends ConsumerState<CustomModal> {
                 ref.watch(imageProvider).isNotEmpty
                     ? SingleChildScrollView(
                         child: Container(
-                            width: 500,
+                            width: 600,
                             constraints: BoxConstraints(maxHeight: 300),
                             padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Stack(fit: StackFit.expand, children: [
-                              ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.memory(
-                                    ref.watch(imageProvider),
-                                    fit: BoxFit.cover,
-                                  )),
-                              Positioned(
-                                  top: 2,
-                                  right: 3,
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        ref.read(imageProvider.notifier).state =
-                                            Uint8List(0);
-                                      },
-                                      child: InkResponse(
-                                        child: Icon(
-                                            color: Colors.white, Icons.close),
-                                      )))
-                            ])))
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.memory(
+                                  ref.watch(imageProvider),
+                                  fit: BoxFit.cover,
+                                ))))
                     : Center(),
                 Divider(color: Color.fromARGB(111, 138, 138, 138), height: 0.3),
                 SizedBox(
@@ -158,20 +146,36 @@ class _CustomModalState extends ConsumerState<CustomModal> {
                             ),
                           ),
                         ),
-                        child: const Text(
-                          "Post",
-                          style: TextStyle(color: Colors.white, fontSize: 14.0),
-                        ),
+                        child: !isLoading
+                            ? const Text(
+                                "Post",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14.0),
+                              )
+                            : SizedBox(
+                                height: 15,
+                                width: 15,
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ))),
                         onPressed: () async {
                           Map<String, dynamic> post = {
                             'content': _textController.text,
                             'media_content': ref.watch(imageProvider),
                           };
                           //send info via socket hered
+                          setState(() {
+                            isLoading = true;
+                          });
                           Map createdPost = await postService.createPost(post);
                           ref
                               .watch(socketProvider)
                               .emit("new_post", createdPost);
+
+                          setState(() {
+                            isLoading = false;
+                          });
                           Navigator.pop(context);
                         },
                       ),

@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:frontend/data/models/user.dart';
 import 'package:frontend/presentation/widgets/shared/suggested_tile.dart';
 import 'package:frontend/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
 class SuggestionsBox extends StatefulWidget {
-  const SuggestionsBox({super.key});
+  final List<dynamic> suggestions;
+  const SuggestionsBox({super.key, required this.suggestions});
 
   @override
   State<SuggestionsBox> createState() => _SuggestionsBoxState();
 }
 
 class _SuggestionsBoxState extends State<SuggestionsBox> {
-  List<String> _suggestions = ["a", "b", "c"];
+  // List<String> _suggestions = ["a", "b", "c"];
 
   @override
   Widget build(BuildContext context) {
@@ -28,31 +30,42 @@ class _SuggestionsBoxState extends State<SuggestionsBox> {
         ),
         Container(
           height: 270,
-          child: ListView.builder(
-              itemCount: _suggestions.length,
-              itemBuilder: (context, index) {
-                if (index == _suggestions.length - 1) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SuggestedTile(),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text("Show more"),
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(36),
-                            )),
-                            padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(
-                                    vertical: 20, horizontal: 15))),
-                      )
-                    ],
-                  );
-                }
-                return SuggestedTile();
-              }),
+          child: widget.suggestions.isNotEmpty
+              ? ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    if (index == 2) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SuggestedTile(
+                            suggestion: widget.suggestions[index],
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context.go('/suggestions');
+                            },
+                            child: Text("Show more"),
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(36),
+                                )),
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                        vertical: 20, horizontal: 15))),
+                          )
+                        ],
+                      );
+                    }
+                    return SuggestedTile(
+                      suggestion: widget.suggestions[index],
+                    );
+                  })
+              : Center(
+                  child: CircularProgressIndicator(),
+                ),
         )
       ]),
     );

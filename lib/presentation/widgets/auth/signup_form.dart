@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/data/services/api/auth_service.dart';
+import 'package:frontend/providers/user_provider.dart';
 import 'package:frontend/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
-class SignupForm extends StatefulWidget {
+class SignupForm extends ConsumerStatefulWidget {
   const SignupForm({super.key});
 
   @override
-  State<SignupForm> createState() => _SignupFormState();
+  ConsumerState<SignupForm> createState() => _SignupFormState();
 }
 
-class _SignupFormState extends State<SignupForm> {
+class _SignupFormState extends ConsumerState<SignupForm> {
   final _formKey = GlobalKey<FormState>();
   String _email = '';
   String _studentId = '';
@@ -16,12 +20,21 @@ class _SignupFormState extends State<SignupForm> {
   String _password = '';
   String _confirmPassword = '';
 
+  bool isLoading = false;
+
+  TextEditingController _idController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  final AuthService authService = AuthService();
+
   @override
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 20),
         width: 500,
-        padding:EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
         color: Colors.white,
         child: Form(
           key: _formKey,
@@ -57,7 +70,7 @@ class _SignupFormState extends State<SignupForm> {
                       elevation: MaterialStateProperty.all<double>(1),
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Colors.white)),
-                  onPressed: () => {},
+                  onPressed: () => {authService.loginWithMicrosoft()},
                 ),
               ),
               const SizedBox(height: 10),
@@ -84,6 +97,7 @@ class _SignupFormState extends State<SignupForm> {
               SizedBox(
                   child: SizedBox(
                 child: TextFormField(
+                  controller: _idController,
                   decoration: const InputDecoration(
                       labelStyle: TextStyle(fontSize: 14),
                       fillColor: AppTheme.secondaryBackgroundColor,
@@ -104,6 +118,7 @@ class _SignupFormState extends State<SignupForm> {
               SizedBox(
                   child: SizedBox(
                 child: TextFormField(
+                  controller: _emailController,
                   decoration: const InputDecoration(
                       labelStyle: TextStyle(fontSize: 14),
                       fillColor: AppTheme.secondaryBackgroundColor,
@@ -124,6 +139,7 @@ class _SignupFormState extends State<SignupForm> {
               SizedBox(
                   child: SizedBox(
                 child: TextFormField(
+                  controller: _usernameController,
                   decoration: const InputDecoration(
                       labelStyle: TextStyle(fontSize: 14),
                       fillColor: AppTheme.secondaryBackgroundColor,
@@ -143,6 +159,7 @@ class _SignupFormState extends State<SignupForm> {
               const SizedBox(height: 20),
               SizedBox(
                 child: TextFormField(
+                  controller: _passwordController,
                   decoration: const InputDecoration(
                     labelStyle: TextStyle(fontSize: 14),
                     labelText: 'Password*',
@@ -162,34 +179,15 @@ class _SignupFormState extends State<SignupForm> {
                 ),
               ),
               const SizedBox(height: 20),
-              // SizedBox(
-              //   child: TextFormField(
-              //     decoration: const InputDecoration(
-              //       labelStyle: TextStyle(fontSize: 14),
-              //       labelText: 'Confirm Password*',
-              //       border: OutlineInputBorder(),
-              //       fillColor: AppTheme.secondaryBackgroundColor,
-              //     ),
-              //     obscureText: true,
-              //     validator: (value) {
-              //       if (value!.isEmpty) {
-              //         return 'Please enter your password';
-              //       }
-              //       return null;
-              //     },
-              //     onSaved: (value) {
-              //       _password = value!;
-              //     },
-              //   ),
-              // ),
-              // const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text("Already have an account?"),
                   TextButton(
                     child: const Text("Login"),
-                    onPressed: () => {},
+                    onPressed: () {
+                      context.go('/login');
+                    },
                   )
                 ],
               ),
@@ -202,14 +200,34 @@ class _SignupFormState extends State<SignupForm> {
                       elevation: MaterialStateProperty.all<double>(0.0),
                       backgroundColor: MaterialStateProperty.all<Color>(
                           AppTheme.primaryColor)),
-                  child: const Text(
-                    'Create account',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () {
+                  child: !isLoading
+                      ? const Text(
+                          'Create account',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      : Center(
+                          child: CircularProgressIndicator(
+                          color: Colors.white,
+                        )),
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                     }
+                    setState(() {
+                      isLoading = true;
+                    });
+                    final loggedInUser = await authService.signUp(
+                        _emailController.text,
+                        _passwordController.text,
+                        _usernameController.text,
+                        _idController.text);
+
+                    setState(() {
+                      isLoading = false;
+                    });
+
+                    ref.read(userProvider.notifier).state = loggedInUser;
+                    context.go('/');
                   },
                 ),
               )

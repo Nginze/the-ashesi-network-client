@@ -2,6 +2,9 @@ import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/data/models/user.dart';
+import 'package:frontend/data/services/api/auth_service.dart';
+import 'package:frontend/data/services/api/user_service.dart';
 import 'package:frontend/presentation/widgets/shared/create_modal.dart';
 import 'package:frontend/providers/user_provider.dart';
 import 'package:frontend/utils/constants.dart';
@@ -74,6 +77,17 @@ class _LeftNavigationBarState extends ConsumerState<LeftNavigationBar> {
               ),
               Align(
                 alignment: Alignment.centerLeft,
+                child: NavButton(
+                    label: 'Logout',
+                    icon: Icon(
+                      Icons.exit_to_app,
+                      color: Colors.red,
+                    ),
+                    location: ''),
+              ),
+              SizedBox(height: 10,),
+              Align(
+                alignment: Alignment.centerLeft,
                 child: SizedBox(
                   width: 200,
                   child: TextButton(
@@ -107,7 +121,7 @@ class _LeftNavigationBarState extends ConsumerState<LeftNavigationBar> {
                 ),
               ),
               SizedBox(
-                height: 340,
+                height: 300,
               ),
               Align(
                 alignment: Alignment.bottomCenter,
@@ -172,7 +186,7 @@ class _LeftNavigationBarState extends ConsumerState<LeftNavigationBar> {
   }
 }
 
-class NavButton extends StatelessWidget {
+class NavButton extends ConsumerWidget {
   final String label;
   final Icon icon;
   final String location;
@@ -184,7 +198,8 @@ class NavButton extends StatelessWidget {
       required this.location});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AuthService authService = AuthService();
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: TextButton.icon(
@@ -201,11 +216,19 @@ class NavButton extends StatelessWidget {
         icon: icon,
         label: Text(
           label,
-          style: const TextStyle(
-              color: Color.fromARGB(202, 0, 0, 0), fontSize: 20.0),
+          style: TextStyle(
+              color:
+             Color.fromARGB(202, 0, 0, 0),
+              fontSize: 20.0),
         ),
-        onPressed: () {
-          context.go(location);
+        onPressed: () async {
+          if (location.isNotEmpty) {
+            context.go(location);
+          } else {
+            await authService.logout();
+            context.go('/login');
+            ref.read(userProvider.notifier).state = null as User;
+          }
         },
       ),
     );
@@ -234,6 +257,7 @@ class ProfileButton extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     ref.watch(userProvider).userName,

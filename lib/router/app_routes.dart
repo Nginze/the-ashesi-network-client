@@ -9,6 +9,7 @@ import 'package:frontend/presentation/screens/home_screen.dart';
 import 'package:frontend/presentation/screens/login_screen.dart';
 import 'package:frontend/presentation/screens/profile_screen.dart';
 import 'package:frontend/presentation/screens/signup_screen.dart';
+import 'package:frontend/presentation/screens/suggestion_screen.dart';
 import 'package:frontend/providers/user_provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -39,6 +40,11 @@ final appRouter = GoRouter(routes: [
       path: '/bookmarks',
       builder: (context, state) =>
           Scaffold(backgroundColor: Colors.white, body: BookmarkPage())),
+
+  GoRoute(
+      path: '/suggestions',
+      builder: (context, state) =>
+          Scaffold(backgroundColor: Colors.white, body: PeoplePage())),
   GoRoute(
     path: '/profile/:userId',
     builder: (context, state) => Scaffold(
@@ -54,4 +60,5 @@ final appRouter = GoRouter(routes: [
         backgroundColor: Colors.white,
         body: DetailedPage(postId: state.params['postId'] as String)),
   ),
+
 ]);

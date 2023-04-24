@@ -6,7 +6,11 @@ import 'package:http/http.dart' as http;
 import 'package:frontend/data/models/comment.dart';
 
 class CommentService {
-  final String baseUrl = 'http://localhost:5000/posts';
+
+  static bool isprod = true;
+  final String baseUrl = isprod
+      ? 'https://flask-production-b88c.up.railway.app/posts'
+      : 'http://localhost:5000/posts';
   final http.Client _client = http.Client();
 
   Future<Comment> getComment(String commentId) async {

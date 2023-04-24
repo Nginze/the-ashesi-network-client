@@ -27,6 +27,7 @@ class _CommentModalState extends ConsumerState<CommentModal> {
 
   final postService = PostService();
   final commentService = CommentService();
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
@@ -161,14 +162,31 @@ class _CommentModalState extends ConsumerState<CommentModal> {
                             ),
                           ),
                         ),
-                        child: const Text(
-                          "Reply",
-                          style: TextStyle(color: Colors.white, fontSize: 14.0),
-                        ),
+                        child: !isLoading
+                            ? const Text(
+                                "Reply",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14.0),
+                              )
+                            : SizedBox(
+                                height: 15,
+                                width: 15,
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                )),
+                              ),
                         onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
                           await commentService.createComment(
                               _textController.text, widget.postId, '');
                           Navigator.pop(context);
+
+                          setState(() {
+                            isLoading = false;
+                          });
                         },
                       ),
                     ),

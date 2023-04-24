@@ -7,6 +7,7 @@ import 'package:frontend/data/services/api/user_service.dart';
 import 'package:frontend/presentation/widgets/shared/create_modal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/providers/user_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileSetup extends ConsumerStatefulWidget {
   const ProfileSetup({super.key});
@@ -355,6 +356,8 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                           residency: _controllers[6].text,
                           yearGroup: _controllers[4].text);
                       await userService.updateUser(updatedUser);
+                      Navigator.pop(context);
+                      // context.go('/profile/${ref.watch(userProvider).userId}');
                     },
                   ),
                 ),

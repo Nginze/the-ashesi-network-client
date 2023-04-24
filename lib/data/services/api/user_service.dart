@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/data/models/post.dart';
 import 'package:frontend/data/models/user.dart';
 import 'package:http/browser_client.dart';
@@ -5,9 +7,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class UserService {
-  final String baseUrl = 'http://localhost:5000/users';
+  static bool isprod = true;
+  final String baseUrl = isprod
+      ? 'https://flask-production-b88c.up.railway.app/users'
+      : 'http://localhost:5000/users';
   final http.Client _client = http.Client();
-
 
   Future<User> getUser(String userId) async {
     (_client as BrowserClient).withCredentials = true;
@@ -16,23 +20,33 @@ class UserService {
     return User.fromJson(json);
   }
 
-
   Future<void> updateUser(User user) async {
     (_client as BrowserClient).withCredentials = true;
     final response = await _client.patch(
       Uri.parse('$baseUrl/${user.userId}'),
       body: jsonEncode({
-        'bio': user.bio, 
+        'bio': user.bio,
         'major': user.major,
-        'year_group': user.yearGroup, 
+        'year_group': user.yearGroup,
         'favorite_food': user.favoriteFood,
-        'favorite_movie': user.favoriteMovie, 
+        'favorite_movie': user.favoriteMovie,
         'residency': user.residency
       }),
     );
 
     if (response.statusCode != 200) {
       throw Exception('Failed to update user');
+    } else {
+      Fluttertoast.showToast(
+          msg: "Updated Your Profile",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          webPosition: 'center',
+          webBgColor: "#101110",
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 
@@ -81,6 +95,21 @@ class UserService {
       );
     } else {
       throw Exception('Failed to get Feed');
+    }
+  }
+
+  Future<List<dynamic>> getSuggested() async {
+    (_client as BrowserClient).withCredentials = true;
+    final response = await _client.get(
+      Uri.parse('$baseUrl/suggestions'),
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      // print(json);
+      return json;
+    } else {
+      throw Exception('Failed to get Suggestion');
     }
   }
 }
