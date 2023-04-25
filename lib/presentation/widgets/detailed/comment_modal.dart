@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:boxicons/boxicons.dart';
@@ -182,11 +183,15 @@ class _CommentModalState extends ConsumerState<CommentModal> {
                           });
                           await commentService.createComment(
                               _textController.text, widget.postId, '');
+
+                          window.location.reload();
+
                           Navigator.pop(context);
 
                           setState(() {
                             isLoading = false;
                           });
+
                         },
                       ),
                     ),

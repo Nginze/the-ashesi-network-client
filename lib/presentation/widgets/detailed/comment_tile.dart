@@ -86,7 +86,7 @@ class _CommentTileState extends State<CommentTile> {
                         iconSize: 18,
                         splashRadius: 18,
                       ),
-                      const Text("6")
+                      // const Text("6")
                     ],
                   ),
                   const SizedBox(width: 18),

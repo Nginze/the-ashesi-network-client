@@ -2,6 +2,7 @@ import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/data/models/user.dart';
 import 'package:frontend/data/services/api/auth_service.dart';
 import 'package:frontend/data/services/api/user_service.dart';
@@ -85,7 +86,9 @@ class _LeftNavigationBarState extends ConsumerState<LeftNavigationBar> {
                     ),
                     location: ''),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: SizedBox(
@@ -200,6 +203,7 @@ class NavButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AuthService authService = AuthService();
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: TextButton.icon(
@@ -216,15 +220,22 @@ class NavButton extends ConsumerWidget {
         icon: icon,
         label: Text(
           label,
-          style: TextStyle(
-              color:
-             Color.fromARGB(202, 0, 0, 0),
-              fontSize: 20.0),
+          style: TextStyle(color: Color.fromARGB(202, 0, 0, 0), fontSize: 20.0),
         ),
         onPressed: () async {
           if (location.isNotEmpty) {
             context.go(location);
           } else {
+            Fluttertoast.showToast(
+                msg: "Logging out...🏃‍♂️",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                webPosition: 'center',
+                webBgColor: "#101110",
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0);
             await authService.logout();
             context.go('/login');
             ref.read(userProvider.notifier).state = null as User;

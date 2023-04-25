@@ -50,6 +50,38 @@ class UserService {
     }
   }
 
+  Future<void> setupProfile(User user) async {
+    (_client as BrowserClient).withCredentials = true;
+    final response = await _client.patch(
+      Uri.parse('$baseUrl/${user.userId}/setup'),
+      body: jsonEncode({
+        'student_id': user.studentId,
+        'date_of_birth': user.dateOfBirth,
+        'bio': user.bio,
+        'major': user.major,
+        'year_group': user.yearGroup,
+        'favorite_food': user.favoriteFood,
+        'favorite_movie': user.favoriteMovie,
+        'residency': user.residency
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update user');
+    } else {
+      Fluttertoast.showToast(
+          msg: "Updated Your Profile",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          webPosition: 'center',
+          webBgColor: "#101110",
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
   Future<void> followUser(String userId) async {
     (_client as BrowserClient).withCredentials = true;
     final response = await _client.post(Uri.parse('$baseUrl/$userId/follow'));
@@ -82,6 +114,22 @@ class UserService {
     }
   }
 
+  Future<List<Post>> getCreatedById(int cursor, String userId) async {
+    (_client as BrowserClient).withCredentials = true;
+    final response = await _client.get(
+      Uri.parse('$baseUrl/created/$userId?cursor=$cursor'),
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return List<Post>.from(
+        json['data'].map((postJson) => Post.fromJson(postJson)),
+      );
+    } else {
+      throw Exception('Failed to get Feed');
+    }
+  }
+
   Future<List<Post>> getSaved(int cursor) async {
     (_client as BrowserClient).withCredentials = true;
     final response = await _client.get(
@@ -98,10 +146,41 @@ class UserService {
     }
   }
 
+  Future<List<Post>> getSavedById(int cursor, String userId) async {
+    (_client as BrowserClient).withCredentials = true;
+    final response = await _client.get(
+      Uri.parse('$baseUrl/bookmarks/$userId?cursor=$cursor'),
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return List<Post>.from(
+        json['data'].map((postJson) => Post.fromJson(postJson)),
+      );
+    } else {
+      throw Exception('Failed to get Feed');
+    }
+  }
+  
   Future<List<dynamic>> getSuggested() async {
     (_client as BrowserClient).withCredentials = true;
     final response = await _client.get(
       Uri.parse('$baseUrl/suggestions'),
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      // print(json);
+      return json;
+    } else {
+      throw Exception('Failed to get Suggestion');
+    }
+  }
+
+  Future<List<dynamic>> search (String query) async {
+    (_client as BrowserClient).withCredentials = true;
+    final response = await _client.get(
+      Uri.parse('$baseUrl/search?q=$query'),
     );
 
     if (response.statusCode == 200) {

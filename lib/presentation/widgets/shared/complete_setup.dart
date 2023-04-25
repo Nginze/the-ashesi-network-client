@@ -1,4 +1,4 @@
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+// import 'package:eva_icons_flutter/eva_icutter.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/data/models/user.dart';
 import 'package:frontend/data/services/api/post_service.dart';
@@ -7,16 +7,16 @@ import 'package:frontend/presentation/widgets/shared/create_modal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/providers/user_provider.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:html';
 
-class ProfileSetup extends ConsumerStatefulWidget {
-  const ProfileSetup({super.key});
+class CompleteProfileSetup extends ConsumerStatefulWidget {
+  const CompleteProfileSetup({super.key});
 
   @override
-  ConsumerState<ProfileSetup> createState() => _ProfileSetupState();
+  ConsumerState<CompleteProfileSetup> createState() =>
+      _CompleteProfileSetupState();
 }
 
-class _ProfileSetupState extends ConsumerState<ProfileSetup> {
+class _CompleteProfileSetupState extends ConsumerState<CompleteProfileSetup> {
   List<TextEditingController> _controllers = [];
 
   List<String> _placeholders = [
@@ -83,7 +83,7 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                   margin: EdgeInsets.symmetric(vertical: 20),
                   child: Column(children: [
                     Text(
-                      'Edit your profile',
+                      'Finish setting up your profile',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                     ),
@@ -129,7 +129,6 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                             return Container(
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: TextField(
-                                enabled: false,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.pin,
@@ -146,7 +145,6 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                             return Container(
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: TextField(
-                                enabled: false,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.person,
@@ -164,7 +162,6 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                             return Container(
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: TextField(
-                                enabled: false,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.email,
@@ -183,7 +180,6 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                             return Container(
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: TextField(
-                                enabled: false,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.card_giftcard,
@@ -201,7 +197,6 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                             return Container(
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: TextField(
-                                enabled: false,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.group,
@@ -218,7 +213,6 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                             return Container(
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: TextField(
-                                enabled: true,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.school,
@@ -235,7 +229,6 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                             return Container(
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: TextField(
-                                enabled: true,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.location_city,
@@ -252,7 +245,6 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                             return Container(
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: TextField(
-                                enabled: true,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.restaurant_menu,
@@ -270,7 +262,6 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                             return Container(
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: TextField(
-                                enabled: true,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.movie,
@@ -288,7 +279,6 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                             return Container(
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: TextField(
-                                enabled: true,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.book,
@@ -343,10 +333,10 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                     onPressed: () async {
                       User updatedUser = User(
                           userId: ref.watch(userProvider).userId,
-                          studentId: ref.watch(userProvider).studentId,
+                          studentId: _controllers[0].text,
                           emailAddress: ref.watch(userProvider).emailAddress,
                           userName: ref.watch(userProvider).userName,
-                          dateOfBirth: ref.watch(userProvider).dateOfBirth,
+                          dateOfBirth: _controllers[3].text,
                           avatarUrl: ref.watch(userProvider).avatarUrl,
                           microsoftId: ref.watch(userProvider).microsoftId,
                           bio: _controllers[9].text,
@@ -355,10 +345,11 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
                           major: _controllers[5].text,
                           residency: _controllers[6].text,
                           yearGroup: _controllers[4].text);
-                      await userService.updateUser(updatedUser);
-                      Navigator.pop(context);
-                      window.location.reload();
-                      // context.go('/profile/${ref.watch(userProvider).userId}');
+
+                      await userService.setupProfile(updatedUser);
+
+                      // ref.read(userProvider.notifier).state = updatedUser;
+                      context.go('/profile/${ref.watch(userProvider).userId}');
                     },
                   ),
                 ),
@@ -368,51 +359,5 @@ class _ProfileSetupState extends ConsumerState<ProfileSetup> {
         ),
       ),
     );
-  }
-}
-
-class ProfileSetupButton extends StatefulWidget {
-  const ProfileSetupButton({super.key});
-
-  @override
-  State<ProfileSetupButton> createState() => _ProfileSetupButtonState();
-}
-
-class _ProfileSetupButtonState extends State<ProfileSetupButton> {
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-        style: ButtonStyle(
-            side: MaterialStateProperty.resolveWith<BorderSide>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.disabled)) {
-                  return BorderSide(color: Colors.grey, width: 1);
-                }
-                return BorderSide(color: Colors.blue, width: 1);
-              },
-            ),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(36),
-              ),
-            ),
-            padding: MaterialStateProperty.all(
-                EdgeInsets.symmetric(vertical: 15, horizontal: 20))),
-        child: Text(
-          "Set up profile",
-          style: TextStyle(color: Colors.blue),
-        ),
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return Dialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(17),
-                    ),
-                    child: ProfileSetup());
-              });
-        });
-    // return const Placeholder();
   }
 }

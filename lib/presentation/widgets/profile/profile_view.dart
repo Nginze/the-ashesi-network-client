@@ -1,5 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/data/models/post.dart';
 import 'package:frontend/data/models/user.dart';
 import 'package:frontend/data/services/api/post_service.dart';
@@ -9,15 +10,15 @@ import 'package:frontend/presentation/widgets/profile/profile_card.dart';
 import 'package:frontend/presentation/widgets/profile/profile_tabs.dart';
 import 'package:go_router/go_router.dart';
 
-class ProfileView extends StatefulWidget {
+class ProfileView extends ConsumerStatefulWidget {
   final String userId;
   const ProfileView({super.key, required this.userId});
 
   @override
-  State<ProfileView> createState() => _ProfileViewState();
+  ConsumerState<ProfileView> createState() => _ProfileViewState();
 }
 
-class _ProfileViewState extends State<ProfileView> {
+class _ProfileViewState extends ConsumerState<ProfileView> {
   final UserService userService = UserService();
 
   User _user = User(
@@ -72,7 +73,7 @@ class _ProfileViewState extends State<ProfileView> {
     setState(() {
       _isLoading = true;
     });
-    List<Post> newPosts = await userService.getCreated(_page);
+    List<Post> newPosts = await userService.getCreatedById(_page, widget.userId);
     setState(() {
       _posts.addAll(newPosts);
       _isLoading = false;
@@ -84,7 +85,7 @@ class _ProfileViewState extends State<ProfileView> {
     setState(() {
       _isLoading = true;
     });
-    List<Post> newSaves = await userService.getSaved(_page);
+    List<Post> newSaves =  await userService.getSavedById(_page, widget.userId);
     setState(() {
       _saves.addAll(newSaves);
       _isLoading = false;

@@ -1,8 +1,10 @@
+import 'dart:html';
 import 'package:boxicons/boxicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:frontend/utils/constants.dart';
+import 'package:go_router/go_router.dart';
 
 class SearchInput extends StatefulWidget {
   const SearchInput({super.key});
@@ -20,7 +22,12 @@ class _SearchInputState extends State<SearchInput> {
         children: [
           Container(
             width: 340,
-            child: const TextField(
+            child: TextField(
+              onSubmitted: (String query) {
+                // window.location.replace('/#/search?q=$query');
+                context.go('/search?q=$query');
+                // window.location.reload();
+              },
               decoration: InputDecoration(
                   hintText: 'Search the Ashesi Network',
                   border: OutlineInputBorder(

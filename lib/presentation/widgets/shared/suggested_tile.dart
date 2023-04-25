@@ -85,10 +85,12 @@ class _SuggestedTileState extends State<SuggestedTile> {
                   padding: MaterialStateProperty.all(
                       EdgeInsets.symmetric(vertical: 15, horizontal: 20))),
               child: Text(
-                "Follow",
+                "Check out",
                 style: TextStyle(color: Colors.blue),
               ),
-              onPressed: () {},
+              onPressed: () {
+                context.go('/profile/${widget.suggestion['user_id']}');
+              },
             ))
           ]),
         ),

@@ -47,7 +47,7 @@ dependencies:
   fluttertoast: ^8.2.1
   image_picker_web: ^3.0.0+1
   boxicons: ^2.1.3
-  flutter_step_container: ^0.0.1
+  # flutter_step_container: ^0.0.1
   firebase_core: ^2.10.0
   cloud_firestore: ^4.5.2
 

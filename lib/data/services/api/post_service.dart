@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
 class PostService {
-
   static bool isprod = true;
   final String baseUrl = isprod
       ? 'https://flask-production-b88c.up.railway.app/posts'
@@ -24,7 +23,7 @@ class PostService {
   Future<Map> createPost(Map<String, dynamic> post) async {
     (_client as BrowserClient).withCredentials = true;
     final response = await _client.post(
-      Uri.parse(baseUrl),
+      Uri.parse('$baseUrl/'),
       body: jsonEncode(post),
     );
     if (response.statusCode != 200) {

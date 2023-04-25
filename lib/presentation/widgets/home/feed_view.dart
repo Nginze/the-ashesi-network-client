@@ -9,8 +9,10 @@ import 'package:frontend/data/services/api/post_service.dart';
 import 'package:frontend/data/services/socket_service.dart';
 import 'package:frontend/presentation/widgets/home/_feed_input.dart';
 import 'package:frontend/presentation/widgets/home/post_tile.dart';
+import 'package:frontend/presentation/widgets/shared/complete_setup.dart';
 import 'package:frontend/presentation/widgets/shared/feed_input.dart';
 import 'package:frontend/providers/socket_provider.dart';
+import 'package:frontend/providers/user_provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class FeedView extends ConsumerStatefulWidget {
@@ -84,7 +86,19 @@ class _FeedViewState extends ConsumerState<FeedView> {
 
   @override
   Widget build(BuildContext context) {
+    print(ref.watch(userProvider).major);
+    print(ref.watch(userProvider).dateOfBirth);
     // ref.watch(socketProvider).connect();
+    if (ref.watch(userProvider).major == '') {
+      print('major is null');
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return WillPopScope(
+                onWillPop: () async => false,
+                child: Dialog(child: CompleteProfileSetup()));
+          });
+    }
     if (!_eventListenersRegistered) {
       _registerEventListeners();
       _eventListenersRegistered = true;
@@ -145,6 +159,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
                 );
               }
               Post currentPost = _posts[index];
+              // return Text('${currentPost.content}');
               return PostTile(post: currentPost);
             },
             childCount: _isLoading ? _posts.length + 1 : _posts.length,

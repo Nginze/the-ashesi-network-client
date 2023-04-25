@@ -26,8 +26,7 @@ class User {
       required this.major,
       required this.residency,
       required this.yearGroup,
-      required this.dateOfBirth 
-      });
+      required this.dateOfBirth});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -40,7 +39,7 @@ class User {
       emailAddress: json['email_address'],
       favoriteFood: json['favorite_food'],
       favoriteMovie: json['favorite_movie'],
-      major: json['major'],
+      major: json['major'] != null ? json['major'] : '',
       yearGroup: json['year_group'],
       residency: json['residency'],
       dateOfBirth: json['date_of_birth'],

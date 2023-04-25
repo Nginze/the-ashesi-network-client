@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:boxicons/boxicons.dart';
@@ -178,7 +179,7 @@ class _ReplyModalState extends ConsumerState<ReplyModal> {
                                   color: Colors.white,
                                 )),
                               ),
-                        onPressed: () {
+                        onPressed: () async {
                           setState(() {
                             isLoading = true;
                           });
@@ -189,6 +190,8 @@ class _ReplyModalState extends ConsumerState<ReplyModal> {
                             isLoading = false;
                           });
                           Navigator.pop(context);
+
+                          window.location.reload();
                         },
                       ),
                     ),

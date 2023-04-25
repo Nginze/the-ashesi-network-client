@@ -22,8 +22,8 @@ class _CustomModalState extends ConsumerState<CustomModal> {
   final _textController = TextEditingController();
 
   final postService = PostService();
-  final SocketService socketService =
-      SocketService(socket: IO.io('http://localhost:5000'));
+  // final SocketService socketService =
+  //     SocketService(socket: IO.io('http://localhost:5000'));
 
   bool isLoading = false;
 
