@@ -25,8 +25,6 @@ void main() async {
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
-
-  // throw Exception('Something went wrong refresh your page');
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future(() {

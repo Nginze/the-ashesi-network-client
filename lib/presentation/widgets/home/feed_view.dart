@@ -22,8 +22,6 @@ class FeedView extends ConsumerStatefulWidget {
 
 class _FeedViewState extends ConsumerState<FeedView> {
   final PostService postService = PostService();
-  // final SocketService socketService =
-  //     SocketService(socket: IO.io('http://localhost:5000'));
   ScrollController _scrollController = ScrollController();
   List<Post> _posts = [];
   bool _isLoading = false;
@@ -87,10 +85,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
 
   @override
   Widget build(BuildContext context) {
-    // print(ref.watch(userProvider).major);
-    // print(ref.watch(userProvider).dateOfBirth);
     if (ref.watch(userProvider).major == '') {
-      // print('major is null');
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -99,10 +94,6 @@ class _FeedViewState extends ConsumerState<FeedView> {
                 child: Dialog(child: CompleteProfileSetup()));
           });
     }
-    // if (!_eventListenersRegistered) {
-    //   _registerEventListeners();
-    //   _eventListenersRegistered = true;
-    // }
 
     return CustomScrollView(
       controller: _scrollController,
@@ -159,7 +150,6 @@ class _FeedViewState extends ConsumerState<FeedView> {
                 );
               }
               Post currentPost = _posts[index];
-              // return Text('${currentPost.content}');
               return PostTile(post: currentPost);
             },
             childCount: _isLoading ? _posts.length + 1 : _posts.length,
