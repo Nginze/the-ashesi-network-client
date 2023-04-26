@@ -5,13 +5,6 @@ import 'package:frontend/data/services/api/auth_service.dart';
 import 'package:frontend/providers/user_provider.dart';
 
 class AuthCallbackScreen extends ConsumerWidget {
-  // const AuthCallbackScreen({super.key});
-
-//   @override
-//   State<AuthCallbackScreen> createState() => _AuthCallbackScreenState();
-// }
-
-// class _AuthCallbackScreenState extends State<AuthCallbackScreen> {
   final authService = AuthService();
 
   @override

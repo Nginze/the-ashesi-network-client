@@ -66,52 +66,15 @@ class _ReplyTileState extends State<ReplyTile> {
                   ])),
               const SizedBox(height: 10),
               Container(
-                  // width: 540,
                   child: Text(
                 widget.comment.content,
-                // style: TextStyle(fontFamily: 'FS'),
               )),
               const SizedBox(height: 5),
               Container(
-                  // width: 540,
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  // Row(
-                  //   children: [
-                  //     IconButton(
-                  //       onPressed: () {},
-                  //       icon: const Icon(EvaIcons.heartOutline),
-                  //       iconSize: 18,
-                  //       splashRadius: 18,
-                  //     ),
-                  //     const Text("6")
-                  //   ],
-                  // ),
                   const SizedBox(width: 18),
-                  // TextButton(
-                  //     style: ButtonStyle(
-                  //         padding: MaterialStateProperty.all(
-                  //             EdgeInsets.symmetric(
-                  //                 vertical: 15, horizontal: 10))),
-                  //     onPressed: () {
-                  //       showDialog(
-                  //           context: context,
-                  //           builder: (BuildContext context) {
-                  //             return Dialog(
-                  //                 shape: RoundedRectangleBorder(
-                  //                   borderRadius: BorderRadius.circular(17),
-                  //                 ),
-                  //                 child: ReplyModal(
-                  //                     widget.comment.author['username'],
-                  //                     widget.comment.postId,
-                  //                     (widget.comment.commentId) as String));
-                  //           });
-                  //     },
-                  //     child: Text(
-                  //       "Reply",
-                  //       style: TextStyle(color: Colors.grey),
-                  //     )),
                   const SizedBox(width: 18),
                   widget.comment.replyCount > 0
                       ? TextButton.icon(

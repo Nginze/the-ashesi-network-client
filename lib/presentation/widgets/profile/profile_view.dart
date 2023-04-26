@@ -22,20 +22,20 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
   final UserService userService = UserService();
 
   User _user = User(
-      userId: '',
-      studentId: '',
-      emailAddress: '',
-      userName: '',
-      avatarUrl: '',
-      microsoftId: '',
-      bio: '',
-      favoriteFood: '',
-      favoriteMovie: '',
-      major: '',
-      residency: '',
-      yearGroup: '',
-      dateOfBirth: '', 
-      );
+    userId: '',
+    studentId: '',
+    emailAddress: '',
+    userName: '',
+    avatarUrl: '',
+    microsoftId: '',
+    bio: '',
+    favoriteFood: '',
+    favoriteMovie: '',
+    major: '',
+    residency: '',
+    yearGroup: '',
+    dateOfBirth: '',
+  );
   Future<User> getUser(userId) async {
     return userService.getUser(userId);
   }
@@ -73,7 +73,8 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
     setState(() {
       _isLoading = true;
     });
-    List<Post> newPosts = await userService.getCreatedById(_page, widget.userId);
+    List<Post> newPosts =
+        await userService.getCreatedById(_page, widget.userId);
     setState(() {
       _posts.addAll(newPosts);
       _isLoading = false;
@@ -85,7 +86,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
     setState(() {
       _isLoading = true;
     });
-    List<Post> newSaves =  await userService.getSavedById(_page, widget.userId);
+    List<Post> newSaves = await userService.getSavedById(_page, widget.userId);
     setState(() {
       _saves.addAll(newSaves);
       _isLoading = false;
@@ -191,12 +192,12 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                     style: TextStyle(color: Colors.black),
                                   ),
                                 ),
-                                Tab(
-                                  child: Text(
-                                    "Likes",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
+                                // Tab(
+                                //   child: Text(
+                                //     "Likes",
+                                //     style: TextStyle(color: Colors.black),
+                                //   ),
+                                // ),
                               ]),
                               Container(
                                 width: 600,
@@ -254,9 +255,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                                       ),
                                     ],
                                   )),
-                                  Container(
-                                    child: Text("Likes"),
-                                  )
+                                  // Container(
+                                  //   child: Text("Likes"),
+                                  // )
                                 ]),
                               )
                             ],

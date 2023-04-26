@@ -124,7 +124,7 @@ class _LeftNavigationBarState extends ConsumerState<LeftNavigationBar> {
                 ),
               ),
               SizedBox(
-                height: 300,
+                height: 280,
               ),
               Align(
                 alignment: Alignment.bottomCenter,

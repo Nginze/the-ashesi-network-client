@@ -33,6 +33,7 @@ class _FeedViewState extends ConsumerState<FeedView> {
   void initState() {
     super.initState();
     _fetchData();
+    _registerEventListeners();
     _scrollController.addListener(_onScroll);
   }
 
@@ -65,8 +66,8 @@ class _FeedViewState extends ConsumerState<FeedView> {
     ref.watch(socketProvider).connect();
     ref.watch(socketProvider).addListener('new_post', (data) {
       final json = jsonDecode(data);
-      // print(json);
       Post newPost = Post.fromJson(json);
+      print('new_message');
       setState(() {
         _posts.insert(0, newPost);
       });
@@ -86,11 +87,10 @@ class _FeedViewState extends ConsumerState<FeedView> {
 
   @override
   Widget build(BuildContext context) {
-    print(ref.watch(userProvider).major);
-    print(ref.watch(userProvider).dateOfBirth);
-    // ref.watch(socketProvider).connect();
+    // print(ref.watch(userProvider).major);
+    // print(ref.watch(userProvider).dateOfBirth);
     if (ref.watch(userProvider).major == '') {
-      print('major is null');
+      // print('major is null');
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -99,10 +99,10 @@ class _FeedViewState extends ConsumerState<FeedView> {
                 child: Dialog(child: CompleteProfileSetup()));
           });
     }
-    if (!_eventListenersRegistered) {
-      _registerEventListeners();
-      _eventListenersRegistered = true;
-    }
+    // if (!_eventListenersRegistered) {
+    //   _registerEventListeners();
+    //   _eventListenersRegistered = true;
+    // }
 
     return CustomScrollView(
       controller: _scrollController,

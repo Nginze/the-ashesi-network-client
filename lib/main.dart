@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
       options: FirebaseOptions(
           apiKey: "AIzaSyCTtwnhUGrGI0O7TSV6tUDtHHNgZiKdkXs",
@@ -29,6 +30,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future(() {
+      ref.watch(socketProvider).connect();
       ref.read(userLoadingProvider.notifier).state = true;
     });
     AuthService authService = AuthService();

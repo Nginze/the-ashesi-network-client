@@ -17,7 +17,12 @@ class ProfileCard extends ConsumerWidget {
 // class _ProfileCardState extends State<ProfileCard> {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
+    return 
+    user == null
+    ?
+    SizedBox(width: 30, height: 30,child: Center(child: CircularProgressIndicator(),))
+    :
+    Container(
         padding: const EdgeInsets.all(15),
         margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
         child: Column(
@@ -52,11 +57,10 @@ class ProfileCard extends ConsumerWidget {
                               SizedBox(height: 15),
                               Row(
                                 children: [
-                                  Text("0 followers"),
+                                  Text("${ref.watch(userProvider).emailAddress}"),
                                   SizedBox(
                                     width: 25,
                                   ),
-                                  Text("0 followers")
                                 ],
                               ),
                               SizedBox(height: 15),

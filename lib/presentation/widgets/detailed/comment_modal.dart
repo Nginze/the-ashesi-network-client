@@ -1,6 +1,5 @@
 import 'dart:html';
 import 'dart:typed_data';
-
 import 'package:boxicons/boxicons.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
@@ -130,15 +129,6 @@ class _CommentModalState extends ConsumerState<CommentModal> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // TextButton(
-                        //   onPressed: () async {
-                        //     Uint8List? selectedImageBytes =
-                        //         await ImagePickerWeb.getImageAsBytes();
-                        //     ref.read(imageProvider.notifier).state =
-                        //         (selectedImageBytes) as Uint8List;
-                        //   },
-                        //   child: const Icon(EvaIcons.imageOutline),
-                        // ),
                         const SizedBox(width: 10),
                         TextButton(
                           onPressed: () {},
@@ -191,7 +181,6 @@ class _CommentModalState extends ConsumerState<CommentModal> {
                           setState(() {
                             isLoading = false;
                           });
-
                         },
                       ),
                     ),

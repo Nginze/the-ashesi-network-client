@@ -21,8 +21,6 @@ class BookmarkView extends ConsumerStatefulWidget {
 
 class _BookmarkViewState extends ConsumerState<BookmarkView> {
   final UserService userService = UserService();
-  // final SocketService socketService =
-  //     SocketService(socket: IO.io('http://localhost:5000'));
   ScrollController _scrollController = ScrollController();
   List<Post> _posts = [];
   bool _isLoading = false;
@@ -60,35 +58,8 @@ class _BookmarkViewState extends ConsumerState<BookmarkView> {
     }
   }
 
-  // void _registerEventListeners() {
-  //   ref.watch(socketProvider).addListener('new_post', (data) {
-  //     final json = jsonDecode(data);
-  //     // print(json);
-  //     Post newPost = Post.fromJson(json);
-  //     setState(() {
-  //       _posts.insert(0, newPost);
-  //     });
-
-  //     Fluttertoast.showToast(
-  //         msg: "📗 New Post Received!",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         webPosition: 'center',
-  //         webBgColor: "#101110",
-  //         timeInSecForIosWeb: 1,
-  //         backgroundColor: Colors.green,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0);
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // if (!_eventListenersRegistered) {
-    //   _registerEventListeners();
-    //   _eventListenersRegistered = true;
-    // }
-
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -117,22 +88,6 @@ class _BookmarkViewState extends ConsumerState<BookmarkView> {
             child: const SizedBox(height: 20),
           ),
         ),
-        // SliverToBoxAdapter(
-        //   child: Container(child: NewFeedInput()),
-        // ),
-        // SliverToBoxAdapter(
-        //   child: Container(
-        //     decoration: const BoxDecoration(
-        //       border: Border(
-        //         bottom: BorderSide(
-        //           color: Color.fromARGB(150, 158, 158, 158),
-        //           width: 0.5,
-        //         ),
-        //       ),
-        //     ),
-        //     child: const SizedBox(height: 0),
-        //   ),
-        // ),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
@@ -153,5 +108,4 @@ class _BookmarkViewState extends ConsumerState<BookmarkView> {
     );
   }
 
-  // bool _eventListenersRegistered = false;
 }
